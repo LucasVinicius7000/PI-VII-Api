@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SaverStock.Controllers
+namespace LocalStore.Controllers
 {
     [ApiController]
     [Route("[controller]")]

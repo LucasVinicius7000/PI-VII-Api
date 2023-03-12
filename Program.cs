@@ -1,4 +1,4 @@
-namespace SaverStock
+namespace LocalStore
 {
     public class Program
     {
