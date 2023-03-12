@@ -1,4 +1,7 @@
+using LocalStore.Infra.Data.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocalStore.Controllers
 {
@@ -13,21 +16,45 @@ namespace LocalStore.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly LocalStoreDbContext _context;
+
+        private readonly UserManager<IdentityUser> _userManager;
+
+
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, LocalStoreDbContext context, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
+            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            try
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                var user = new IdentityUser
+                {
+                    UserName = "usuario_mock",
+                    Email = "usuario_mock@exemplo.com"
+                };
+
+                var result = await _userManager.CreateAsync(user, "123Pa$$word.");
+
+
+                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                })
+                .ToArray();
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+          
         }
     }
 }
