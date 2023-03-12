@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "SaverStock": {
+    "LocalStore": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
