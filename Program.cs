@@ -1,6 +1,8 @@
 using LocalStore.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using LocalStore.Infra.BlobStorage.Implementations;
+using LocalStore.Infra.BlobStorage.Interfaces;
 
 namespace LocalStore
 {
@@ -24,10 +26,12 @@ namespace LocalStore
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+
             // Injetando o contexto do banco de dados
             builder.Services.AddDbContext<LocalStoreDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("LocalStoreDb"))
-            ) ;
+            );
 
             // Injetando o identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

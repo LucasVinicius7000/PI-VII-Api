@@ -1,7 +1,9 @@
 using LocalStore.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using LocalStore.Infra.BlobStorage.Implementations;
+using LocalStore.Infra.BlobStorage.Interfaces;
+
 
 namespace LocalStore.Controllers
 {
@@ -20,41 +22,36 @@ namespace LocalStore.Controllers
 
         private readonly UserManager<IdentityUser> _userManager;
 
+        private IBlobStorageService _blobStorageService;
 
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, LocalStoreDbContext context, UserManager<IdentityUser> userManager)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, LocalStoreDbContext context, UserManager<IdentityUser> userManager, IBlobStorageService blogStorageService)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _blobStorageService = blogStorageService;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        [HttpPost(Name = "GetWeatherForecast")]
+        [RequestSizeLimit(10000000000)]
+        public async Task<IEnumerable<WeatherForecast>> Get([FromBody] string base64)
         {
-            try
+
+            byte[] meyarraydebites = Convert.FromBase64String(base64);
+
+            MemoryStream stream = new(meyarraydebites);
+
+            var retorno = await _blobStorageService.UploadFile("foto_de_teste", "png", stream);
+
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                var user = new IdentityUser
-                {
-                    UserName = "usuario_mock",
-                    Email = "usuario_mock@exemplo.com"
-                };
-
-                var result = await _userManager.CreateAsync(user, "123Pa$$word.");
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
+                Uri = retorno
+            }).ToArray();
 
 
-                return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(index),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-                })
-                .ToArray();
-            } catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-          
         }
     }
 }
