@@ -27,6 +27,6 @@ steps:
   inputs:
     azureSubscription: '$(azureSubscription)'
     appType: webAppLinux
-    appName: 'localstore'
+    appName: 'luchaosavalokita'
     package: '$(build.artifactStagingDirectory)\WebApp.zip'
     deploymentMethod: auto
