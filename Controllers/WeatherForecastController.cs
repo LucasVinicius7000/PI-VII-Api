@@ -32,7 +32,7 @@ namespace LocalStore.Controllers
             _blobStorageService = blogStorageService;
         }
 
-        [HttpGet(Name = "/")]
+        [HttpGet("Get")]
         [RequestSizeLimit(10000000000)]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
@@ -45,9 +45,8 @@ namespace LocalStore.Controllers
             }).ToArray();
         }
 
-        [HttpPost(Name = "GetWeatherForecast")]
-        [RequestSizeLimit(10000000000)]
-        public async Task<IEnumerable<WeatherForecast>> Get([FromBody] string base64)
+        [HttpPost("Post")]
+        public async Task<IEnumerable<WeatherForecast>> Redirect([FromBody] string base64)
         {
 
             byte[] meyarraydebites = Convert.FromBase64String(base64);
