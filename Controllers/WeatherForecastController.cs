@@ -33,7 +33,7 @@ namespace LocalStore.Controllers
         }
 
         [HttpGet("Get")]
-        [RequestSizeLimit(10000000000)]
+        [RequestSizeLimit(1000000000)]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
 
