@@ -30,3 +30,11 @@ steps:
     appName: 'localstore'
     package: '$(build.artifactStagingDirectory)\WebApp.zip'
     deploymentMethod: auto
+    
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: $(azureSubscription)
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: |
+      az webapp config set -g LucasResources -n localstore --startup-file "dotnet LocalStore.dll"
