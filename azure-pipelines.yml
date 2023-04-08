@@ -26,15 +26,8 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: '$(azureSubscription)'
-    appType: webAppLinux
-    appName: 'localstore'
+    appType: webApp
+    appName: 'luchaoavalokitasapi'
     package: '$(build.artifactStagingDirectory)\WebApp.zip'
-    deploymentMethod: auto
+    deploymentMethod: zipDeploy
     
-- task: AzureCLI@2
-  inputs:
-    azureSubscription: $(azureSubscription)
-    scriptType: pscore
-    scriptLocation: inlineScript
-    inlineScript: |
-      az webapp config set -g LucasResources -n localstore --startup-file "dotnet LocalStore.dll"
