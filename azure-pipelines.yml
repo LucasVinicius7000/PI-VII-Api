@@ -23,11 +23,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: AzureWebApp@1
+- task: AzureRmWebAppDeployment@4
   inputs:
+    ConnectionType: 'AzureRM'
     azureSubscription: '$(azureSubscription)'
-    appType: webAppLinux
-    appName: 'luchaosavalokita'
-    package: '$(build.artifactStagingDirectory)\WebApp.zip'
-    customDeployFolder: 'ROOT'
-    deploymentMethod: auto
+    appType: webApp
+    WebAppName: 'luchaosavalokita'
+    packageForLinux: '$(build.artifactStagingDirectory)/WebApp.zip'
