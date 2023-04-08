@@ -23,9 +23,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: PowerShell@2
+- task: AzureWebApp@1
   inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host 'aqui está o conteúdo que vc queria ver $(build.artifactStagingDirectory)'
-
+    azureSubscription: '$(azureSubscription)'
+    appType: webApp
+    appName: 'luchaosavalokita'
+    package: '$(build.artifactStagingDirectory)\WebApp.zip'
+    customDeployFolder: 'ROOT'
+    deploymentMethod: auto
