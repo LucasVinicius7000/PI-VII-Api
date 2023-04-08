@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Infra\Data\Migrations\**" />
-    <Content Remove="Infra\Data\Migrations\**" />
-    <EmbeddedResource Remove="Infra\Data\Migrations\**" />
-    <None Remove="Infra\Data\Migrations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.15.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />

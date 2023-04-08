@@ -34,36 +34,32 @@ namespace LocalStore.Controllers
 
         [HttpGet("Get")]
         [RequestSizeLimit(1000000000)]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get([FromQuery] string username, [FromQuery] string email)
         {
+            try
+            {
+                var user = new IdentityUser
+                {
+                    UserName = username,
+                    Email = email
+                };
 
+                var result = await _userManager.CreateAsync(user, "123Pa$$word.");
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+            
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             }).ToArray();
-        }
-
-        [HttpPost("Post")]
-        public async Task<IEnumerable<WeatherForecast>> Redirect([FromBody] string base64)
-        {
-
-            byte[] meyarraydebites = Convert.FromBase64String(base64);
-
-            MemoryStream stream = new(meyarraydebites);
-
-            var retorno = await _blobStorageService.UploadFile("foto_de_teste", "png", stream);
-
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
-                Uri = retorno
-            }).ToArray();
-
-
         }
     }
 }
