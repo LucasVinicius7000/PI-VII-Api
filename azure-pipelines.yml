@@ -27,5 +27,5 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host 'build.artifactStagingDirectory'
+      Write-Host '$(build.artifactStagingDirectory)'
 
