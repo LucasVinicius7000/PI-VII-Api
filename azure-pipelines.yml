@@ -29,5 +29,5 @@ steps:
     appType: webApp
     appName: 'luchaoavalokitasapi'
     package: '$(build.artifactStagingDirectory)\WebApp.zip'
-    deploymentMethod: runFromPackage
+    deploymentMethod: auto
     
