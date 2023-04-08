@@ -27,5 +27,5 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Host '$(build.artifactStagingDirectory)'
+      Write-Host 'aqui está o conteúdo que vc queria ver $(build.artifactStagingDirectory)'
 
