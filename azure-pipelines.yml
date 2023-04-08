@@ -26,7 +26,7 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: '$(azureSubscription)'
-    appType: webApp
+    appType: webAppLinux
     appName: 'luchaosavalokita'
     package: '$(build.artifactStagingDirectory)\WebApp.zip'
     customDeployFolder: 'ROOT'
