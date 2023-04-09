@@ -23,8 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\" />
-    <Folder Include="Domain\" />
+    <Folder Include="Domain\DTO\" />
+    <Folder Include="Domain\Enum\" />
+    <Folder Include="Domain\Model\" />
     <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>
 

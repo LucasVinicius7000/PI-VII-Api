@@ -8,3 +8,6 @@ dotnet_diagnostic.CS8618.severity = none
 
 # CS8601: Possível atribuição de referência nula.
 dotnet_diagnostic.CS8601.severity = none
+
+# IDE0032: Usar a propriedade auto
+dotnet_diagnostic.IDE0032.severity = none

@@ -14,7 +14,5 @@ namespace LocalStore.Services
             _services = services;
         }
 
-  
-
     }
 }
