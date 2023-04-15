@@ -11,3 +11,15 @@ dotnet_diagnostic.CS8601.severity = none
 
 # IDE0032: Usar a propriedade auto
 dotnet_diagnostic.IDE0032.severity = none
+
+# Default severity for analyzer diagnostics with category 'Style'
+dotnet_analyzer_diagnostic.category-Style.severity = none
+
+# CA2254: O modelo deve ser uma expressão estática
+dotnet_diagnostic.CA2254.severity = none
+
+# CA1848: Usar os delegados LoggerMessage
+dotnet_diagnostic.CA1848.severity = none
+
+# CA2201: Não gerar tipos de exceção reservados
+dotnet_diagnostic.CA2201.severity = none
