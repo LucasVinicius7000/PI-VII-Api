@@ -1,28 +1,28 @@
-﻿namespace LocalStore.Controllers.Shared
+﻿namespace LocalStore.Application.Controllers.Shared
 {
     public class ApiResponse<T> where T : class?
     {
         public T? Data { get; set; }
-        public bool? IsSucesful { get; set; }
+        public bool? IsSucessful { get; set; }
         public string ClientMessage { get; set; } = string.Empty;
         public string TechnicalMessage { get; set; } = string.Empty;
-        public IEnumerable<string> Errors { get; set; } = Enumerable.Empty<string>();
+        public object Errors { get; set; }
 
         public ApiResponse<T> SucessResponse(T Data, string ClientMessage)
         {
             this.Data = Data;
             this.ClientMessage = ClientMessage;
-            IsSucesful = true;
+            IsSucessful = true;
 
             return this;
         }
 
-        public ApiResponse<T> FailureResponse(T? Data, string ClientMessage, string TechnicalMessage, IEnumerable<string> Errors)
+        public ApiResponse<T> FailureResponse(string ClientMessage, string? TechnicalMessage, object? Errors)
         {
-            this.Data = Data;
+            this.Data = null;
             this.ClientMessage = ClientMessage;
             this.TechnicalMessage = TechnicalMessage;
-            IsSucesful = false;
+            IsSucessful = false;
             this.Errors = Errors;
 
             return this;

@@ -23,3 +23,6 @@ dotnet_diagnostic.CA1848.severity = none
 
 # CA2201: Não gerar tipos de exceção reservados
 dotnet_diagnostic.CA2201.severity = none
+
+# CS8603: Possível retorno de referência nula.
+dotnet_diagnostic.CS8603.severity = silent

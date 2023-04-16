@@ -6,7 +6,6 @@ using LocalStore.Controllers.Shared;
 
 namespace LocalStore.Controllers
 {
-    [ApiController]
     public class WeatherForecastController : CustomBaseController<WeatherForecastController>
     {
         private static readonly string[] Summaries = new[]

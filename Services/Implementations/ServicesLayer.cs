@@ -1,5 +1,6 @@
 ﻿using LocalStore.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using LocalStore.Infra.Data.Repositories.Interfaces;
 
 namespace LocalStore.Services.Implementations
 {
@@ -20,7 +21,8 @@ namespace LocalStore.Services.Implementations
         public UserManager<IdentityUser> UserManager => _userManager;
         public RoleManager<IdentityRole> RoleManager => _roleManager;
         public SignInManager<IdentityUser> SignInManager => _signInManager;
-        public UserServices User { get; }
+        public UserService User { get; }
+        public EstabelecimentoService Estabelecimento { get; }
 
         #endregion
 
@@ -29,14 +31,16 @@ namespace LocalStore.Services.Implementations
             IConfiguration configuration,
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            SignInManager<IdentityUser> signInManager
+            SignInManager<IdentityUser> signInManager,
+            IRepositoryLayer repositories
         )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            User ??= new UserServices(this);
+            User ??= new UserService(this, repositories);
+            Estabelecimento ??= new EstabelecimentoService(this, repositories);
         }
         
     }
