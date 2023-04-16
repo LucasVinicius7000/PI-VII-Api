@@ -8,6 +8,7 @@ namespace LocalStore.Services.Interfaces
         UserManager<IdentityUser> UserManager { get; }
         RoleManager<IdentityRole> RoleManager { get; }
         SignInManager<IdentityUser> SignInManager { get; }
-        UserServices User { get; }
+        UserService User { get; }
+        EstabelecimentoService Estabelecimento { get; }
     }
 }

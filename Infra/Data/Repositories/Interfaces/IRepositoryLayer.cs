@@ -2,6 +2,10 @@
 {
     public interface IRepositoryLayer
     {
-        UserRepository UserRepository { get; }
+        Task BeginTransaction();
+        Task RollBackTransaction();
+        Task CommitTransaction();
+        UserRepository User { get; }
+        EstabelecimentoRepository Estabelecimento { get; }
     }
 }

@@ -11,10 +11,42 @@ namespace LocalStore.Infra.Data.Repositories.Implementations
             _context = context;
         }
 
-        private readonly UserRepository? _userRepository;
-        public UserRepository UserRepository
+        private readonly UserRepository? _user;
+        public UserRepository User
         {
-            get { return _userRepository ?? new UserRepository(_context); }
+            get { return _user ?? new UserRepository(_context); }
+        }
+
+        private readonly EstabelecimentoRepository? _estabelecimento;
+        public EstabelecimentoRepository Estabelecimento
+        {
+            get { return _estabelecimento ?? new EstabelecimentoRepository(_context); }
+        }
+
+
+
+
+
+        // Compartilhados entre todos repositórios
+
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task BeginTransaction()
+        {
+            await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task RollBackTransaction()
+        {
+            await _context.Database.RollbackTransactionAsync();
+        }
+
+        public async Task CommitTransaction()
+        {
+            await _context.Database.CommitTransactionAsync();
         }
 
     }

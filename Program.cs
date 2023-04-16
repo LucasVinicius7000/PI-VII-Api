@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using LocalStore.Infra.BlobStorage.Implementations;
 using LocalStore.Infra.BlobStorage.Interfaces;
+using LocalStore.Infra.Data.Repositories.Implementations;
+using LocalStore.Infra.Data.Repositories.Interfaces;
+using LocalStore.Services.Interfaces;
+using LocalStore.Services.Implementations;
+using Newtonsoft.Json;
 
 namespace LocalStore
 {
@@ -24,6 +29,7 @@ namespace LocalStore
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -34,17 +40,26 @@ namespace LocalStore
                 options.UseSqlServer(configuration.GetConnectionString("LocalStoreDb"))
             );
 
+            // Injetando a camada de serviços
+            builder.Services.AddScoped<IServicesLayer, ServicesLayer>();
+
+            // Injetando a camada de repositórios
+            builder.Services.AddScoped<IRepositoryLayer, RepositoryLayer>();
+
             // Injetando o identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
             })
-            .AddEntityFrameworkStores<LocalStoreDbContext>();
+            .AddEntityFrameworkStores<LocalStoreDbContext>()
+            .AddDefaultTokenProviders();
 
           
             var app = builder.Build();
 
+            // Cria um escopo a parte para fornecer os serviços que gerenciam a criação
+            // de roles e do usuário padrão. O escopo é descartado assim que as operações são finalizadas.
             using (var serviceScope = app.Services.CreateScope())
             {
                  // Cria as roles necessárias para o projeto e o usuário administrador 
@@ -78,7 +93,7 @@ namespace LocalStore
         private static async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] basicRoles = { "Admin", "Cliente", "Vendedor" };
+            string[] basicRoles = { "Admin", "Cliente", "Estabelecimento" };
 
             foreach(var role in basicRoles)
             {
@@ -110,7 +125,7 @@ namespace LocalStore
             // Busca no banco o usuário administrador padrão pelo seu email.
             var existUser = await userManager.FindByEmailAsync(adminUser.Email);
 
-            // Se o usário administrador padrão não existir, cria um o atribui a role Admin.
+            // Se o usuário administrador padrão não existir, cria um o atribui a role Admin.
             if(existUser == null)
             {
                 try
@@ -119,7 +134,7 @@ namespace LocalStore
                     IdentityResult userToCreateResult = await userManager.
                         CreateAsync(adminUser, configuration["Secrets:DefaultAdmin"]);
 
-                    // Busca o usário criado pelo email.
+                    // Busca o usuário criado pelo email.
                     var createdUser = await userManager.FindByEmailAsync(adminUser.Email);
 
                     // Se o usuário for encontrado atribui a role de Admin ao usuário.
