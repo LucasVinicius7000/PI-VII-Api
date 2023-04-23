@@ -20,7 +20,7 @@ namespace LocalStore.Services
             _repositories = repositories;
         }
 
-        public async Task<Estabelecimento> CriarEstabelecimentoUsuario(Estabelecimento estabelecimento, UserDTO userDTO)
+        public async Task<Estabelecimento> CriarEstabelecimentoUsuario(Estabelecimento estabelecimento, User userDTO)
         {
             try
             {

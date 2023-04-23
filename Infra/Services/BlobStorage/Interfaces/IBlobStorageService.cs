@@ -1,4 +1,4 @@
-﻿namespace LocalStore.Infra.BlobStorage.Interfaces
+﻿namespace LocalStore.Infra.Services.BlobStorage.Interfaces
 {
     public interface IBlobStorageService
     {

@@ -16,7 +16,7 @@ namespace LocalStore.Services
             _repositories = repositories;
         }
 
-        public async Task<IdentityUser> CriarUsuario(UserDTO user)
+        public async Task<IdentityUser> CriarUsuario(User user)
         {
             try
             {

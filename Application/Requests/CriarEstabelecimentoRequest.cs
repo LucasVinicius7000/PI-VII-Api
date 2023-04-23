@@ -39,9 +39,9 @@ namespace LocalStore.Application.Requests
 
         }
 
-        public UserDTO ToUserDTO()
+        public User ToUserDTO()
         {
-            return new UserDTO()
+            return new User()
             {
                 UserName = this.UserName,
                 Email = this.Email,

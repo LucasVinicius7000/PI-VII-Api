@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using LocalStore.Infra.BlobStorage.Interfaces;
+using LocalStore.Infra.Services.BlobStorage.Interfaces;
 using LocalStore.Application.Controllers.Shared;
 using LocalStore.Application.Requests;
 using LocalStore.Application.Responses;
