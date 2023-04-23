@@ -7,30 +7,30 @@ namespace LocalStore.Application.Controllers.Shared
 {
   
 
-    [Route("proxy")]
+    [Route("create")]
     [ApiController]
     public class ProxyController : ControllerBase
     {
-  
-
         [HttpGet("")]
         public async Task<ActionResult<JToken>> Get([FromQuery] string url)
         {
+
             try
             {
-                using(var client = new HttpClient())
-                {
-                    // Realiza a requisição para o endpoint desejado utilizando o HttpClient
-                    var response = await client.GetAsync(url);
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+                requestMessage.Headers.Remove("Sec-Fetch-Site");
 
-                    // Lê o conteúdo da resposta como um objeto JToken
+                using (var client = new HttpClient())
+                {
+                    var response = await client.SendAsync(requestMessage);
+
+
                     var content = await response.Content.ReadAsStringAsync();
 
                     JToken json = JObject.Parse(content);
                     
                     return new JsonResult(json);
-                }
-                
+                }      
             }
             catch (HttpRequestException)
             {
