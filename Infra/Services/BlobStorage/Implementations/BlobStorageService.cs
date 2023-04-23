@@ -1,8 +1,8 @@
-﻿using LocalStore.Infra.BlobStorage.Interfaces;
+﻿using LocalStore.Infra.Services.BlobStorage.Interfaces;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
-namespace LocalStore.Infra.BlobStorage.Implementations
+namespace LocalStore.Infra.Services.BlobStorage.Implementations
 {
     public class BlobStorageService : IBlobStorageService
     {

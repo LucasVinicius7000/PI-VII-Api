@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using LocalStore.Infra.BlobStorage.Interfaces;
+using LocalStore.Infra.Services.BlobStorage.Interfaces;
 using LocalStore.Application.Controllers.Shared;
+
+using LocalStore.Infra.Services.DistanceMatrix.Implementations;
+using LocalStore.Domain.DTO;
 
 namespace LocalStore.Application.Controllers
 {
@@ -48,6 +51,24 @@ namespace LocalStore.Application.Controllers
                 var response = new ApiResponse<IdentityUser>().FailureResponse(ex.Message, "Exceção em: UserContoller:Login", ex);
                 return StatusCode(500, response);
             }
+        }
+
+        [HttpGet("calculate")]
+        [AllowAnonymous]
+        public async Task<Coordinates> CalculateDistances()
+        {
+            var a = new Geolocation(Configuration);
+
+            Coordinates cliente = new();
+            cliente.Latitude = -18.4081349;
+            cliente.Longitude = -46.4104869;
+            Coordinates estabelecimento = new();
+            estabelecimento.Latitude = -29.3688;
+            estabelecimento.Longitude = -50.8786;
+
+            //return await a.CalculateDistanceByCoordinates(cliente, estabelecimento);
+            return await a.GetCordinatesByGeocodifcation("");
+  
         }
 
     }

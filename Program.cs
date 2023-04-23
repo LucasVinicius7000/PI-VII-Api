@@ -1,8 +1,8 @@
 using LocalStore.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using LocalStore.Infra.BlobStorage.Implementations;
-using LocalStore.Infra.BlobStorage.Interfaces;
+using LocalStore.Infra.Services.BlobStorage.Implementations;
+using LocalStore.Infra.Services.BlobStorage.Interfaces;
 using LocalStore.Infra.Data.Repositories.Implementations;
 using LocalStore.Infra.Data.Repositories.Interfaces;
 using LocalStore.Services.Interfaces;
