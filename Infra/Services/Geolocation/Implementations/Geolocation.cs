@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace LocalStore.Infra.Services.DistanceMatrix.Implementations
 {
-    public class Geolocation : IGeolocation
+    public class Geolocation : IGeolocation 
     {
 
         private readonly IConfiguration _configuration;
@@ -24,7 +24,7 @@ namespace LocalStore.Infra.Services.DistanceMatrix.Implementations
         {
             try
             {
-                this.Url = _configuration.GetValue<string>("GoogleMapsBaseEndpoints:DistanceMatrix");
+                this.Url = _configuration.GetValue<string>("GoogleMapsApisBaseUrls:DistanceMatrix");
                 JsonDocument result;
                 using (var client = new HttpClient())
                 {

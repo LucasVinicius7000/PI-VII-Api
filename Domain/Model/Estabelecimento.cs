@@ -19,6 +19,8 @@ namespace LocalStore.Domain.Model
         public string? UrlLogoPerfil { get; set; }
         public Double Latitude { get; set; }
         public Double Longitude { get; set; }
+        [NotMapped]
+        public Double DistanciaEstabelecimentoUsuario { get; set; } 
 
     }
 }

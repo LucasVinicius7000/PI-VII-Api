@@ -6,6 +6,5 @@ namespace LocalStore.Infra.Services.DistanceMatrix.Interfaces
     public interface IGeolocation
     {
         Task<double> CalculateDistanceByCoordinates(Coordinates origin, Coordinates destination);
-        //Task<Coordinates> GetCordinatesByGeocodifcation(string address);
     }
 }

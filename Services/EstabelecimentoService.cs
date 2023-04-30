@@ -5,6 +5,7 @@ using LocalStore.Application.Controllers;
 using LocalStore.Domain.Model;
 using LocalStore.Domain.DTO;
 using LocalStore.Infra.Data.Repositories.Interfaces;
+using LocalStore.Infra.Services.DistanceMatrix.Implementations;
 
 namespace LocalStore.Services
 {
@@ -56,6 +57,48 @@ namespace LocalStore.Services
             }
         }
 
+        public async Task<List<Estabelecimento>> BuscarEstabelecimentosProximosPorRaio(Coordinates origem, double raio)
+        {
+            try
+            {
+                if(origem == null || double.IsNaN(origem.Longitude) || double.IsNaN(origem.Latitude))
+                {
+                    throw new Exception("As coordenadas informadas são invállidas.");
+                }
+
+                if (raio <= 0 || double.IsNaN(raio))
+                {
+                    throw new Exception("O raio da pesquisa informado não é válido.");
+                }
+
+                List<Estabelecimento> estabelecimentos = new List<Estabelecimento>();
+                estabelecimentos =  await _repositories.Estabelecimento.ListaEstabelecimentosPorRaioECoordenadas(origem, raio);
+                if(estabelecimentos.Count == 0 || estabelecimentos == null) throw new Exception("Nenhum estabelecimento próximo foi encontrado.");
+
+                var geolocation = new Geolocation(_services.Configuration);
+
+                var estabelecimentosComDistancia = new List<Estabelecimento>();
+
+
+                foreach(var e in estabelecimentos)
+                {
+                    var destino = new Coordinates() { Latitude = e.Latitude, Longitude = e.Longitude };
+                    var estabelecimentoTemp = e;
+                    e.DistanciaEstabelecimentoUsuario = await geolocation.CalculateDistanceByCoordinates(origem, destino);
+                    if(e.DistanciaEstabelecimentoUsuario <= raio)
+                    {
+                        estabelecimentosComDistancia.Add(estabelecimentoTemp);
+                    }
+                }
+
+                return estabelecimentosComDistancia;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
 
     }
 }

@@ -55,19 +55,19 @@ namespace LocalStore.Application.Controllers
 
         [HttpGet("calculate")]
         [AllowAnonymous]
-        public async Task<Coordinates> CalculateDistances()
+        public async Task<double> CalculateDistances()
         {
             var a = new Geolocation(Configuration);
 
             Coordinates cliente = new();
-            cliente.Latitude = -18.4081349;
-            cliente.Longitude = -46.4104869;
+            cliente.Latitude = -18.405177;
+            cliente.Longitude = -46.425473;
             Coordinates estabelecimento = new();
-            estabelecimento.Latitude = -29.3688;
-            estabelecimento.Longitude = -50.8786;
+            estabelecimento.Latitude = -18.415871;
+            estabelecimento.Longitude = -46.417255;
 
             //return await a.CalculateDistanceByCoordinates(cliente, estabelecimento);
-            return await a.GetCordinatesByGeocodifcation("");
+            return await a.CalculateDistanceByCoordinates(cliente, estabelecimento);
   
         }
 
