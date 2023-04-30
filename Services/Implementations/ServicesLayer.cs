@@ -23,6 +23,7 @@ namespace LocalStore.Services.Implementations
         public SignInManager<IdentityUser> SignInManager => _signInManager;
         public UserService User { get; }
         public EstabelecimentoService Estabelecimento { get; }
+        public TokenService TokenService { get; }
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace LocalStore.Services.Implementations
             _configuration = configuration;
             User ??= new UserService(this, repositories);
             Estabelecimento ??= new EstabelecimentoService(this, repositories);
+            TokenService ??= new TokenService(configuration);
         }
         
     }

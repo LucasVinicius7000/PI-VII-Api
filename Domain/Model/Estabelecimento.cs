@@ -21,6 +21,7 @@ namespace LocalStore.Domain.Model
         public Double Longitude { get; set; }
         [NotMapped]
         public Double DistanciaEstabelecimentoUsuario { get; set; } 
+        public Boolean Aprovado { get; set; }
 
     }
 }

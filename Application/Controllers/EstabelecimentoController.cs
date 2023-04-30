@@ -1,5 +1,5 @@
-﻿using LocalStore.Infra.Data.Context;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using LocalStore.Infra.Data.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using LocalStore.Infra.Services.BlobStorage.Interfaces;
@@ -45,7 +45,8 @@ namespace LocalStore.Application.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("listar")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Estabelecimento>>> ListarEstabelecimentosProximos([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] double raio)
         {
 

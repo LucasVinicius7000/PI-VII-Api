@@ -8,6 +8,12 @@ using LocalStore.Infra.Data.Repositories.Interfaces;
 using LocalStore.Services.Interfaces;
 using LocalStore.Services.Implementations;
 using Newtonsoft.Json;
+using System.Text;
+using System.Net;
+using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 namespace LocalStore
 {
@@ -31,7 +37,32 @@ namespace LocalStore
             builder.Services.AddControllers();
             builder.Services.AddControllers().AddNewtonsoftJson();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(s =>
+            {
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer"
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+
+            });
+
             builder.Services.AddCors();
 
             builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
@@ -56,6 +87,26 @@ namespace LocalStore
             .AddEntityFrameworkStores<LocalStoreDbContext>()
             .AddDefaultTokenProviders();
 
+            var key = Encoding.ASCII.GetBytes(builder.Configuration["Secrets:TokenSecret"]);
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            builder.Services.AddAuthorization();
           
             var app = builder.Build();
 
@@ -80,17 +131,24 @@ namespace LocalStore
                 app.UseSwaggerUI();
             }
 
+
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+
             app.UseHttpsRedirection();
+
+
+            app.UseAuthentication();
+
 
             app.UseAuthorization();
 
 
             app.MapControllers();
+
 
             app.Run();
 
