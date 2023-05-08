@@ -37,6 +37,7 @@ namespace LocalStore.Services
                     throw new Exception("Ocorreu um erro ao criar o usuário.");
                 }
 
+                estabelecimento.Aprovado = false;
                 var estabelecimentoCriado = await _repositories.Estabelecimento.
                     InsertEstabelecimento(estabelecimento);
 

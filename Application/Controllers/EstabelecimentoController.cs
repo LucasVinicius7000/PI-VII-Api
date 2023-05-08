@@ -46,7 +46,6 @@ namespace LocalStore.Application.Controllers
         }
 
         [HttpGet("listar")]
-        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Estabelecimento>>> ListarEstabelecimentosProximos([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] double raio)
         {
 

@@ -11,5 +11,6 @@ namespace LocalStore.Services.Interfaces
         TokenService TokenService { get; }
         UserService User { get; }
         EstabelecimentoService Estabelecimento { get; }
+        ClienteService Cliente { get; }
     }
 }

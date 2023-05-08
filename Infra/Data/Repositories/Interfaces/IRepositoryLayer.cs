@@ -7,5 +7,6 @@
         Task CommitTransaction();
         UserRepository User { get; }
         EstabelecimentoRepository Estabelecimento { get; }
+        ClienteRepository Cliente { get; }
     }
 }

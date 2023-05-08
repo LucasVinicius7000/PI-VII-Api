@@ -10,7 +10,7 @@ namespace LocalStore.Infra.Data.Context
         public LocalStoreDbContext(DbContextOptions<LocalStoreDbContext> options) : base(options) { }
 
         public DbSet<Estabelecimento> Estabelecimentos { get; set; }
-
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,13 +24,14 @@ namespace LocalStore.Infra.Data.Context
             builder.Entity<Estabelecimento>()
                 .HasKey(e => e.Id);
 
+            builder.Entity<Cliente>()
+                .HasKey(c => c.Id);
+
             // Foreign Keys
 
 
             // Other Configurations
 
-            builder.Entity<Estabelecimento>()
-                .Ignore(e => e.Email);
 
         }
 

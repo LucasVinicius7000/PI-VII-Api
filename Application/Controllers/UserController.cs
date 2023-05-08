@@ -23,7 +23,16 @@ namespace LocalStore.Application.Controllers
             
             try
             {
-                var userToSignIn = await UserManager.FindByEmailAsync(loginRequest.Email);
+                var userToSignIn = new IdentityUser();
+                if (loginRequest.Email != string.Empty)
+                {
+                    userToSignIn = await UserManager.FindByEmailAsync(loginRequest.Email);
+                }
+                else if (loginRequest.UserName != string.Empty)
+                {
+                    userToSignIn = await UserManager.FindByNameAsync(loginRequest.UserName);
+                }
+                else throw new Exception("O email ou usuário informado é inválido.");
 
                 if(userToSignIn is null)
                 {
@@ -49,6 +58,10 @@ namespace LocalStore.Application.Controllers
                     {
                         Role = role[0],
                         Token = token,
+                        Email = userToSignIn.Email,
+                        Id = userToSignIn.Id,
+                        UserName = userToSignIn.UserName,
+                        IsApproved = true
                     };
                     response = new ApiResponse<LoginResponse>().SucessResponse(loginResponse, "Usuário logado com sucesso.");
                     return StatusCode(200, response);

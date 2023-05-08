@@ -26,6 +26,7 @@ namespace LocalStore.Application.Requests
             {
                 NomeFantasia = this.NomeFantasia,
                 NomeProprietario = this.NomeProprietario,
+                Email = this.Email,
                 RazaoSocial = this.RazaoSocial,
                 CNPJ = this.CNPJ,
                 Descricao = this.Descricao,
