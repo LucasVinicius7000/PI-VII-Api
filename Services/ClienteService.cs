@@ -37,6 +37,7 @@ namespace LocalStore.Services
                     throw new Exception("Ocorreu um erro ao criar o usuário.");
                 }
                 cliente.UserId = usuarioCriado.Id;
+                cliente.Nome = cliente.Nome == string.Empty ? userDto.UserName : cliente.Nome;
                 var clienteCriado = await _repositories.Cliente.InsertCliente(cliente);
 
                 if (clienteCriado == null)
