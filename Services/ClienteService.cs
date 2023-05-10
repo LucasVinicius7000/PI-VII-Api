@@ -25,10 +25,10 @@ namespace LocalStore.Services
         {
             try
             {
-                var userExists = await _services.User.ExisteUsuarioCadastradoComEmailInformado(userDto.Email);
-                if (userExists) throw new Exception("Já existe um usuário cadastrado com esse email.");
-
                 await _repositories.BeginTransaction();
+
+                var userExists = await _services.User.ExisteUsuarioCadastradoComEmailInformado(userDto.Email);
+                if (userExists) throw new Exception("Já existe um usuário cadastrado com esse email.");   
 
                 var usuarioCriado = await _services.User.CriarUsuario(userDto);
 
