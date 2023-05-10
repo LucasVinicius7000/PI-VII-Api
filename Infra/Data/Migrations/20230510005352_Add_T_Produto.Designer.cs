@@ -4,6 +4,7 @@ using LocalStore.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalStore.Infra.Data.Migrations
 {
     [DbContext(typeof(LocalStoreDbContext))]
-    partial class LocalStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510005352_Add_T_Produto")]
+    partial class Add_T_Produto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,35 +105,6 @@ namespace LocalStore.Infra.Data.Migrations
                     b.ToTable("Estabelecimentos");
                 });
 
-            modelBuilder.Entity("LocalStore.Domain.Model.Pedido", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstabelecimentoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FormaPagamento")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusPedido")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("EstabelecimentoId");
-
-                    b.ToTable("Pedidos");
-                });
-
             modelBuilder.Entity("LocalStore.Domain.Model.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -140,9 +113,6 @@ namespace LocalStore.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Categoria")
-                        .HasColumnType("int");
-
                     b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
 
@@ -162,8 +132,8 @@ namespace LocalStore.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Peso")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
@@ -182,66 +152,8 @@ namespace LocalStore.Infra.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EstabelecimentoId");
 
                     b.ToTable("Produtos");
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.ProdutoPedido", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Categoria")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Lote")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Marca")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Observacao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PedidoId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Peso")
-                        .HasColumnType("float");
-
-                    b.Property<int>("QuantidadeEstoque")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UrlImagem")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ValorComDesconto")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ValorUnitario")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("VencimentoEm")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PedidoId");
-
-                    b.ToTable("ProdutoPedido");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -442,47 +354,6 @@ namespace LocalStore.Infra.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LocalStore.Domain.Model.Pedido", b =>
-                {
-                    b.HasOne("LocalStore.Domain.Model.Cliente", "Cliente")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LocalStore.Domain.Model.Estabelecimento", "Estabelecimento")
-                        .WithMany("Pedidos")
-                        .HasForeignKey("EstabelecimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Estabelecimento");
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.Produto", b =>
-                {
-                    b.HasOne("LocalStore.Domain.Model.Estabelecimento", "Estabelecimento")
-                        .WithMany("Produtos")
-                        .HasForeignKey("EstabelecimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estabelecimento");
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.ProdutoPedido", b =>
-                {
-                    b.HasOne("LocalStore.Domain.Model.Pedido", "Pedido")
-                        .WithMany("ProdutosPedidos")
-                        .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pedido");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -532,23 +403,6 @@ namespace LocalStore.Infra.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.Cliente", b =>
-                {
-                    b.Navigation("Pedidos");
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.Estabelecimento", b =>
-                {
-                    b.Navigation("Pedidos");
-
-                    b.Navigation("Produtos");
-                });
-
-            modelBuilder.Entity("LocalStore.Domain.Model.Pedido", b =>
-                {
-                    b.Navigation("ProdutosPedidos");
                 });
 #pragma warning restore 612, 618
         }

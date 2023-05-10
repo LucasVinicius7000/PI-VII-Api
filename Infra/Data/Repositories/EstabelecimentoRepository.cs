@@ -26,14 +26,22 @@ namespace LocalStore.Infra.Data.Repositories
 
             var result = await _context.Set<Estabelecimento>()
                 .FromSqlRaw(@"SELECT * FROM estabelecimentos as E
-                              WHERE(6371 * acos(cos(radians("+ coordinates.Latitude + @"))
+                              WHERE(6371 * acos(cos(radians(" + coordinates.Latitude + @"))
                               *cos(radians(E.Latitude))
-                              * cos(radians(E.Longitude) - radians("+coordinates.Longitude+@"))
-                              + sin(radians("+coordinates.Latitude+@"))
-                              * sin(radians(E.Latitude)))) <= "+distanciaMaximaKm+@";"
+                              * cos(radians(E.Longitude) - radians(" + coordinates.Longitude + @"))
+                              + sin(radians(" + coordinates.Latitude + @"))
+                              * sin(radians(E.Latitude)))) <= " + distanciaMaximaKm + @";"
                 ).ToListAsync();
 
             return result;
+
+        }
+
+        public async Task<Estabelecimento> BuscarEstabelecimentoPeloId(int Id)
+        {
+            return await _context.Set<Estabelecimento>()
+                .Where(e => e.Id == Id)
+                .FirstOrDefaultAsync();
 
         }
 

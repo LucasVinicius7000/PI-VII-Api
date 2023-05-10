@@ -22,6 +22,10 @@ namespace LocalStore.Domain.Model
         [NotMapped]
         public Double DistanciaEstabelecimentoUsuario { get; set; } 
         public Boolean Aprovado { get; set; }
+        [NotMapped]
+        public List<Produto> Produtos { get; set; }
+        [NotMapped]
+        public List<Pedido> Pedidos { get; set; }
 
     }
 }

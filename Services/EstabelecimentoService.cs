@@ -9,8 +9,8 @@ using LocalStore.Infra.Services.DistanceMatrix.Implementations;
 
 namespace LocalStore.Services
 {
-    
-    public class EstabelecimentoService 
+
+    public class EstabelecimentoService
     {
         private readonly IServicesLayer _services;
         private readonly IRepositoryLayer _repositories;
@@ -32,7 +32,7 @@ namespace LocalStore.Services
 
                 var usuarioCriado = await _services.User.CriarUsuario(userDTO);
 
-                if(usuarioCriado is null)
+                if (usuarioCriado is null)
                 {
                     throw new Exception("Ocorreu um erro ao criar o usuário.");
                 }
@@ -41,7 +41,7 @@ namespace LocalStore.Services
                 var estabelecimentoCriado = await _repositories.Estabelecimento.
                     InsertEstabelecimento(estabelecimento);
 
-                if(estabelecimentoCriado == null)
+                if (estabelecimentoCriado == null)
                 {
                     await _repositories.RollBackTransaction();
                     throw new Exception("Falha ao inserir estabelecimento. ");
@@ -62,7 +62,7 @@ namespace LocalStore.Services
         {
             try
             {
-                if(origem == null || double.IsNaN(origem.Longitude) || double.IsNaN(origem.Latitude))
+                if (origem == null || double.IsNaN(origem.Longitude) || double.IsNaN(origem.Latitude))
                 {
                     throw new Exception("As coordenadas informadas são invállidas.");
                 }
@@ -73,20 +73,20 @@ namespace LocalStore.Services
                 }
 
                 List<Estabelecimento> estabelecimentos = new List<Estabelecimento>();
-                estabelecimentos =  await _repositories.Estabelecimento.ListaEstabelecimentosPorRaioECoordenadas(origem, raio);
-                if(estabelecimentos.Count == 0 || estabelecimentos == null) throw new Exception("Nenhum estabelecimento próximo foi encontrado.");
+                estabelecimentos = await _repositories.Estabelecimento.ListaEstabelecimentosPorRaioECoordenadas(origem, raio);
+                if (estabelecimentos.Count == 0 || estabelecimentos == null) throw new Exception("Nenhum estabelecimento próximo foi encontrado.");
 
                 var geolocation = new Geolocation(_services.Configuration);
 
                 var estabelecimentosComDistancia = new List<Estabelecimento>();
 
 
-                foreach(var e in estabelecimentos)
+                foreach (var e in estabelecimentos)
                 {
                     var destino = new Coordinates() { Latitude = e.Latitude, Longitude = e.Longitude };
                     var estabelecimentoTemp = e;
                     e.DistanciaEstabelecimentoUsuario = await geolocation.CalculateDistanceByCoordinates(origem, destino);
-                    if(e.DistanciaEstabelecimentoUsuario <= raio)
+                    if (e.DistanciaEstabelecimentoUsuario <= raio)
                     {
                         estabelecimentosComDistancia.Add(estabelecimentoTemp);
                     }
@@ -101,5 +101,22 @@ namespace LocalStore.Services
             }
         }
 
-    }
+        public async Task<bool> VerificaEstabelecimentoExistePeloId(int Id)
+        {
+            if (Id <= 0) throw new Exception("O id informado não é válido.");
+
+            try
+            {
+                var estabelecimento = await  _repositories.Estabelecimento.BuscarEstabelecimentoPeloId(Id);
+                if (estabelecimento == null) return false;
+                else return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+}
 }

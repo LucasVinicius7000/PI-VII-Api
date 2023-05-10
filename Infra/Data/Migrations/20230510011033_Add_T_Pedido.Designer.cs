@@ -4,6 +4,7 @@ using LocalStore.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalStore.Infra.Data.Migrations
 {
     [DbContext(typeof(LocalStoreDbContext))]
-    partial class LocalStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510011033_Add_T_Pedido")]
+    partial class Add_T_Pedido
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,7 @@ namespace LocalStore.Infra.Data.Migrations
 
                     b.HasIndex("EstabelecimentoId");
 
-                    b.ToTable("Pedidos");
+                    b.ToTable("Pedido");
                 });
 
             modelBuilder.Entity("LocalStore.Domain.Model.Produto", b =>
@@ -139,9 +141,6 @@ namespace LocalStore.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Categoria")
-                        .HasColumnType("int");
 
                     b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
@@ -196,9 +195,6 @@ namespace LocalStore.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Categoria")
-                        .HasColumnType("int");
-
                     b.Property<string>("Lote")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -218,8 +214,8 @@ namespace LocalStore.Infra.Data.Migrations
                     b.Property<int>("PedidoId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Peso")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Peso")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
@@ -474,13 +470,11 @@ namespace LocalStore.Infra.Data.Migrations
 
             modelBuilder.Entity("LocalStore.Domain.Model.ProdutoPedido", b =>
                 {
-                    b.HasOne("LocalStore.Domain.Model.Pedido", "Pedido")
-                        .WithMany("ProdutosPedidos")
+                    b.HasOne("LocalStore.Domain.Model.Pedido", null)
+                        .WithMany("Produtos")
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Pedido");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -548,7 +542,7 @@ namespace LocalStore.Infra.Data.Migrations
 
             modelBuilder.Entity("LocalStore.Domain.Model.Pedido", b =>
                 {
-                    b.Navigation("ProdutosPedidos");
+                    b.Navigation("Produtos");
                 });
 #pragma warning restore 612, 618
         }

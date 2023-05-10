@@ -2,6 +2,6 @@
 {
     public interface IBlobStorageService
     {
-        Task<string> UploadFile(string fileName, string fileExtension, Stream content);
+        Task<string> UploadImageFile(string fileName, string fileExtension, Stream content);
     }
 }

@@ -10,13 +10,11 @@ namespace LocalStore.Application.Requests
         public string Senha { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
-        public string CPF { get; set; }
 
         public Cliente ToCliente()
         {
             return new Cliente()
             {
-                CPF = CPF,
                 Nome = Name,
 
             };

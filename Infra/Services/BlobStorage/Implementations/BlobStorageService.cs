@@ -21,7 +21,7 @@ namespace LocalStore.Infra.Services.BlobStorage.Implementations
                 _configuration.GetValue<string>("AzureBlobContainer"));
         }
 
-        public async Task<string> UploadFile(string fileName, string fileExtension, Stream content)
+        public async Task<string> UploadImageFile(string fileName, string fileExtension, Stream content)
         {
             try
             {

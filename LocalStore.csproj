@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Enum\" />
     <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>
 

@@ -11,6 +11,8 @@ namespace LocalStore.Infra.Data.Context
 
         public DbSet<Estabelecimento> Estabelecimentos { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,8 +29,36 @@ namespace LocalStore.Infra.Data.Context
             builder.Entity<Cliente>()
                 .HasKey(c => c.Id);
 
-            // Foreign Keys
+            builder.Entity<Produto>()
+                .HasKey(p => p.Id);
 
+            builder.Entity<Pedido>()
+                .HasKey(p => p.Id);
+
+            builder.Entity<ProdutoPedido>()
+                .HasKey(p => p.Id);
+
+
+            // Foreign Keys
+            builder.Entity<Produto>()
+                .HasOne(p => p.Estabelecimento)
+                .WithMany(e => e.Produtos)
+                .HasForeignKey(p => p.EstabelecimentoId);
+
+            builder.Entity<Pedido>()
+                .HasOne(p => p.Estabelecimento)
+                .WithMany(e => e.Pedidos)
+                .HasForeignKey(p => p.EstabelecimentoId);
+
+            builder.Entity<Cliente>()
+                .HasMany(c => c.Pedidos)
+                .WithOne(p => p.Cliente)
+                .HasForeignKey(p => p.ClienteId);
+
+            builder.Entity<ProdutoPedido>()
+                .HasOne(p => p.Pedido)
+                .WithMany(p => p.ProdutosPedidos)
+                .HasForeignKey(p => p.PedidoId);
 
             // Other Configurations
 

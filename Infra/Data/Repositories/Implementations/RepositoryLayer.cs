@@ -29,6 +29,12 @@ namespace LocalStore.Infra.Data.Repositories.Implementations
             get { return _cliente ?? new ClienteRepository(_context); }
         }
 
+        private readonly ProdutoRepository? _produto;
+        public ProdutoRepository Produto
+        {
+            get { return _produto ?? new ProdutoRepository(_context); }
+        }
+
 
 
 

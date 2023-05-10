@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using LocalStore.Services.Interfaces;
-
+using LocalStore.Infra.Services.BlobStorage.Interfaces;
+using LocalStore.Infra.Services.BlobStorage.Implementations;
 namespace LocalStore.Application.Controllers.Shared
 {
     [Route("api/")]
@@ -13,6 +14,9 @@ namespace LocalStore.Application.Controllers.Shared
         protected SignInManager<IdentityUser> SignInManager { get; }
         protected IServicesLayer Services { get; }
         protected Logger<T> Logger { get; }
+        protected IBlobStorageService BlobStorage { get; }
+
+
 
         public CustomBaseController(IServiceProvider serviceProvider)
         {
@@ -20,7 +24,8 @@ namespace LocalStore.Application.Controllers.Shared
             UserManager = serviceProvider.GetService<UserManager<IdentityUser>>();
             SignInManager = serviceProvider.GetService<SignInManager<IdentityUser>>();
             Services = serviceProvider.GetService<IServicesLayer>();
-            Logger = serviceProvider.GetService<Logger<T>>();
+            BlobStorage = serviceProvider.GetService<IBlobStorageService>();
+            Logger = serviceProvider.GetService<Logger<T>>();    
         }
 
     }
