@@ -36,6 +36,11 @@ namespace LocalStore.Services
                 {
                     throw new Exception("Ocorreu um erro ao criar o usuário.");
                 }
+
+                var assignedRoleResult = await _services.UserManager.AddToRoleAsync(usuarioCriado, "Cliente");
+
+                if (!assignedRoleResult.Succeeded) throw new Exception("Ocorreu um erro ao definir usuário como cliente.");
+
                 cliente.UserId = usuarioCriado.Id;
                 cliente.Nome = cliente.Nome == string.Empty ? userDto.UserName : cliente.Nome;
                 var clienteCriado = await _repositories.Cliente.InsertCliente(cliente);

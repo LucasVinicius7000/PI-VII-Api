@@ -37,6 +37,10 @@ namespace LocalStore.Services
                     throw new Exception("Ocorreu um erro ao criar o usuário.");
                 }
 
+                var assignedRoleResult = await _services.UserManager.AddToRoleAsync(usuarioCriado, "Estabelecimento");
+
+                if (!assignedRoleResult.Succeeded) throw new Exception("Ocorreu um erro ao definir usuário como estabelecimento.");
+
                 estabelecimento.Aprovado = false;
                 var estabelecimentoCriado = await _repositories.Estabelecimento.
                     InsertEstabelecimento(estabelecimento);
