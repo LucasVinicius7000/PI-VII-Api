@@ -21,6 +21,11 @@ namespace LocalStore.Infra.Data.Repositories
             return result.Entity;
         }
 
+        public async Task<Cliente> BuscarClientePeloUserId(string userId)
+        {
+            return await _context.Set<Cliente>().Where(c => c.UserId == userId).FirstOrDefaultAsync();
+        }
+
 
 
     }

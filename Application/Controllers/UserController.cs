@@ -20,7 +20,6 @@ namespace LocalStore.Application.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ApiResponse<LoginResponse>>> Login([FromBody] LoginRequest loginRequest)
         {
-            
             try
             {
                 var userToSignIn = new IdentityUser();
@@ -46,7 +45,23 @@ namespace LocalStore.Application.Controllers
                 if (signInResult.Succeeded)
                 {
                     role = (List<string>)await Services.UserManager.GetRolesAsync(userToSignIn);
-                    token = Services.TokenService.GenerateToken(userToSignIn, role);
+                    if (role[0] == "Estabelecimento")
+                    {
+                        var estabelecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorEmail(userToSignIn.Email);
+                        if (estabelecimento == null) throw new Exception("Falha ao gerar token do usário. Id do estabelecimento não encontrado.");
+                        token = Services.TokenService.GenerateToken(userToSignIn, role, estabelecimento.Id.ToString());
+                    }
+                    else if (role[0] == "Admin")
+                    {
+                        token = Services.TokenService.GenerateToken(userToSignIn, role, userToSignIn.Id);
+                    }
+                    else if (role[0] == "Cliente")
+                    {
+                        var cliente = await Services.Cliente.BuscarClientePeloUserId(userToSignIn.Id);
+                        if(cliente == null) throw new Exception("Falha ao gerar token do usário. Id do cliente não encontrado.");
+                        token = Services.TokenService.GenerateToken(userToSignIn, role, cliente.Id.ToString());
+                    }
+                    
                 }
                 else throw new Exception("Falha ao realizar login, email ou senha incorretos.");
 

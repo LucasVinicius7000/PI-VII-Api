@@ -45,5 +45,13 @@ namespace LocalStore.Infra.Data.Repositories
 
         }
 
+        public async Task<Estabelecimento> BuscarEstabelecimentoPeloEmail(string Email)
+        {
+            return await _context.Set<Estabelecimento>()
+                .Where(e => e.Email == Email)
+                .FirstOrDefaultAsync();
+
+        }
+
     }
 }

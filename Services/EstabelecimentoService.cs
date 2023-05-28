@@ -122,5 +122,38 @@ namespace LocalStore.Services
 
         }
 
-}
+        public async Task<Estabelecimento> BuscarEstabelecimentoPorId(int EstabelecimentoId)
+        {
+            try
+            {
+                if (EstabelecimentoId == null) throw new Exception("O id do estabelecimento não é válido.");
+
+                var estabelecimentoEncontrado = await _repositories.Estabelecimento.BuscarEstabelecimentoPeloId(EstabelecimentoId);
+
+                if (estabelecimentoEncontrado is null) throw new Exception("O estabelecimento informado não foi encontrado na base de dados.");
+                return estabelecimentoEncontrado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Estabelecimento> BuscarEstabelecimentoPorEmail(string Email)
+        {
+            try
+            {
+                if (Email == null || Email == string.Empty || !Email.Contains('@')) throw new Exception("O email do usuário não corresponde a nenhum estabelecimento cadastrado.");
+
+                var estabelecimentoEncontrado = await _repositories.Estabelecimento.BuscarEstabelecimentoPeloEmail(Email);
+
+                if (estabelecimentoEncontrado is null) throw new Exception("O estabelecimento informado não foi encontrado na base de dados.");
+                return estabelecimentoEncontrado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }
 }

@@ -17,6 +17,7 @@ namespace LocalStore.Application.Controllers
         public ClienteController(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
         [HttpPost("cadastro")]
+        [AllowAnonymous]
         public async Task<ActionResult<ClienteResponse>> CriarUsuarioCliente([FromBody] CreateClienteRequest clienteRequest)
         {
             try

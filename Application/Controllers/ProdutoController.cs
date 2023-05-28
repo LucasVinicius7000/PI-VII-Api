@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using LocalStore.Application.Controllers.Shared;
 using LocalStore.Application.Requests;
 using LocalStore.Application.Responses;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace LocalStore.Application.Controllers
 {
@@ -14,6 +14,7 @@ namespace LocalStore.Application.Controllers
         public ProdutoController(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
         [HttpPost("cadastrar")]
+        [Authorize(Roles = "Estabelecimento")]
         public async Task<ActionResult<ApiResponse<ProdutoResponse>>> CadastrarProduto([FromBody] CreateProdutoRequest produtoRequest)
         {
             try

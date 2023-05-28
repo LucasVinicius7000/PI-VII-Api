@@ -17,6 +17,7 @@ namespace LocalStore.Application.Controllers
         public EstabelecimentoController(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
         [HttpPost("cadastrar")]
+        [AllowAnonymous]
         public async Task<ActionResult<EstabelecimentoUsuarioResponse>> CadastrarEstabelecimento([FromBody] CriarEstabelecimentoUsuarioRequest request)
         {
 
@@ -46,6 +47,7 @@ namespace LocalStore.Application.Controllers
         }
 
         [HttpGet("listar")]
+        [Authorize]
         public async Task<ActionResult<List<Estabelecimento>>> ListarEstabelecimentosProximos([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] double raio)
         {
 
@@ -66,5 +68,25 @@ namespace LocalStore.Application.Controllers
 
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<Estabelecimento>> BuscarInfoEstabelecimento([FromQuery] string userId)
+        {
+            try
+            {
+                if (userId is null || userId == string.Empty) throw new Exception("Id do estabelecimento inválido.");
+                var UserEstabelecimento = await Services.UserManager.FindByIdAsync(userId);
+                if(UserEstabelecimento.Email is null || UserEstabelecimento.Email == string.Empty) throw new Exception("Id do estabelecimento inválido.");
+
+                var estalecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorEmail(UserEstabelecimento.Email);
+                if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
+                return estalecimento;
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao buscar o estabelecimento. " + ex.Message, "EstabelecimentoController:BuscarInfoEstabelecimento", ex);
+                return StatusCode(500, apiResponse);
+            }
+        }
     }
 }

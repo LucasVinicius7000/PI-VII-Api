@@ -17,7 +17,7 @@ namespace LocalStore.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(IdentityUser user, List<string> roles)
+        public string GenerateToken(IdentityUser user, List<string> roles, string entityId)
         {
             var handler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Secrets:TokenSecret"]);
@@ -29,6 +29,7 @@ namespace LocalStore.Services
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim("Email", user.Email),
                     new Claim(ClaimTypes.Role, roles[0]),
+                    new Claim("EntityId", entityId)
 
                 }),
                 Expires = DateTime.UtcNow.AddDays(30),
