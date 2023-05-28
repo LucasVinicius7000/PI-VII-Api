@@ -9,18 +9,18 @@ namespace LocalStore.Application.Requests
     {
         public int EstabelecimentoId { get; set; }
         public string Nome { get; set; }
-        public string Marca { get; set; }
+        public string? Marca { get; set; }
         public double Peso { get; set; }
         public Categoria Categoria { get; set; }
-        public DateTime VencimentoEm { get; set; }
+        public DateTime? VencimentoEm { get; set; }
         public int QuantidadeEstoque { get; set; }
         public double ValorUnitario { get; set; }
-        public double ValorComDesconto { get; set; }
-        public string Lote { get; set; }
-        public string Observacao { get; set; }
-        public string NomeArquivoImagem { get; set; }
-        public string ExtensaoArquivoImagem { get; set; }
-        public string ConteudoArquivoImagem { get; set; }
+        public double? ValorComDesconto { get; set; }
+        public string? Lote { get; set; }
+        public string? Observacao { get; set; }
+        public string? NomeArquivoImagem { get; set; }
+        public string? ExtensaoArquivoImagem { get; set; }
+        public string? ConteudoArquivoImagem { get; set; }
 
         public Produto ToProduto()
         {
