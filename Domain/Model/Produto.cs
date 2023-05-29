@@ -17,7 +17,7 @@ namespace LocalStore.Domain.Model
         public int QuantidadeEstoque { get; set; }
         public double ValorUnitario { get; set; }
         public double? ValorComDesconto { get; set; }
-        public string Lote { get; set; }
+        public string? Lote { get; set; }
         public string Observacao { get; set; }
         public string UrlImagem { get; set; }
     }
