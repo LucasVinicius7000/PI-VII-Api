@@ -18,7 +18,7 @@ namespace LocalStore.Application.Controllers
 
         [HttpPost("cadastrar")]
         [AllowAnonymous]
-        public async Task<ActionResult<EstabelecimentoUsuarioResponse>> CadastrarEstabelecimento([FromBody] CriarEstabelecimentoUsuarioRequest request)
+        public async Task<ActionResult<ApiResponse<EstabelecimentoUsuarioResponse>>> CadastrarEstabelecimento([FromBody] CriarEstabelecimentoUsuarioRequest request)
         {
 
             var estabelecimento = request.ToEstabelecimento();
@@ -69,8 +69,8 @@ namespace LocalStore.Application.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<Estabelecimento>> BuscarInfoEstabelecimento([FromQuery] string userId)
+        [Authorize(Roles = "Admin, Estabelecimento, Cliente")]
+        public async Task<ActionResult<ApiResponse<Estabelecimento>>> BuscarInfoEstabelecimento([FromQuery] string userId)
         {
             try
             {
@@ -80,13 +80,55 @@ namespace LocalStore.Application.Controllers
 
                 var estalecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorEmail(UserEstabelecimento.Email);
                 if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
-                return estalecimento;
+                var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estalecimento, "Estabelecimentos encontrado com sucesso.");
+                return StatusCode(200, apiResponse);
             }
             catch (Exception ex)
             {
                 var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao buscar o estabelecimento. " + ex.Message, "EstabelecimentoController:BuscarInfoEstabelecimento", ex);
                 return StatusCode(500, apiResponse);
             }
+        }
+
+        [HttpPost("submitForm")]
+        [Authorize(Roles = "Estabelecimento")]
+        public async Task<ActionResult<Estabelecimento>> SubmeterFormularioDeAplicacao(FormularioSubmetidoRequest formulario)
+        {
+            
+            try
+            {
+                if (formulario is null) throw new Exception("Formulário submetido inválido, tente novamente.");
+                var content = new MemoryStream(Convert.FromBase64String(formulario.ConteudoArquivo));
+                var arquivoUrl = await BlobStorage.UploadFile(formulario.NomeArquivo, formulario.ExtensaoArquivo, content);
+                if (arquivoUrl == null || arquivoUrl == String.Empty)
+                {
+                    throw new Exception("Ocorreu uma falha ao cadastrar arquivo, tente novamente.");
+                }
+                var estabelecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorId(formulario.EstabelecimentoId);
+                if (estabelecimento is null) throw new Exception("Não foi possível encontrar o estabelecimento.");
+                estabelecimento.Latitude = formulario.Coordenadas.Latitude;
+                estabelecimento.Longitude = formulario.Coordenadas.Longitude;
+                estabelecimento.CPFProprietario = formulario.CPFProprietario;
+                estabelecimento.NomeProprietario = formulario.NomeProprietario;
+                estabelecimento.TaxaKmRodado = formulario.ValorPorKmRodado;
+                estabelecimento.TaxaMinimaEntrega = formulario.TaxaMinima;
+                estabelecimento.UrlAlvaraFuncionamento = arquivoUrl;
+                estabelecimento.MetodoCompra = formulario.MetodoCompra;
+                estabelecimento.FormasPagamentoAceitas = formulario.FormasPagamento;
+
+                var estabelecientoAtualizado = await Services.Estabelecimento.SubmeterFormularioDeAplicacao(estabelecimento);
+
+
+                var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estabelecientoAtualizado, "Formulário de aplicação submetido com sucesso.");
+                return StatusCode(200, apiResponse);
+
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao submeter o formulário, tente novamente mais tarde. " + ex.Message, "EstabelecimentoController:SubmeterFormularioDeAplicacao", ex);
+                return StatusCode(500, apiResponse);
+            }
+
         }
     }
 }

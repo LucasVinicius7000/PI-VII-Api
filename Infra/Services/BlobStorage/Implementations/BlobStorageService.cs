@@ -36,5 +36,20 @@ namespace LocalStore.Infra.Services.BlobStorage.Implementations
             }
         }
 
+        public async Task<string> UploadFile(string fileName, string fileExtension, Stream content)
+        {
+            try
+            {
+                BlobClient blobClient = Container.GetBlobClient(fileName + "." + fileExtension);
+                var result = await blobClient.UploadAsync(content, new BlobHttpHeaders { ContentType = "application/" + fileExtension });
+                return Container.GetBlobClient(fileName + "." + fileExtension).Uri.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocorreu um erro ao realizar o upload do arquivo " + fileName + fileExtension + " : " + ex.Message);
+            }
+        }
+
     }
 }

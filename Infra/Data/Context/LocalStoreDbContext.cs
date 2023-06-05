@@ -40,6 +40,12 @@ namespace LocalStore.Infra.Data.Context
 
 
             // Foreign Keys
+
+            builder.Entity<Estabelecimento>()
+                .HasMany(e => e.Produtos)
+                .WithOne(p => p.Estabelecimento)
+                .HasForeignKey(p => p.Id);
+
             builder.Entity<Produto>()
                 .HasOne(p => p.Estabelecimento)
                 .WithMany(e => e.Produtos)

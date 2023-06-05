@@ -6,6 +6,7 @@ using LocalStore.Domain.Model;
 using LocalStore.Domain.DTO;
 using LocalStore.Infra.Data.Repositories.Interfaces;
 using LocalStore.Infra.Services.DistanceMatrix.Implementations;
+using LocalStore.Application.Requests;
 
 namespace LocalStore.Services
 {
@@ -149,6 +150,20 @@ namespace LocalStore.Services
 
                 if (estabelecimentoEncontrado is null) throw new Exception("O estabelecimento informado não foi encontrado na base de dados.");
                 return estabelecimentoEncontrado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Estabelecimento> SubmeterFormularioDeAplicacao(Estabelecimento estabelecimento)
+        {
+            try
+            {
+                var estabelecimentoAtualizado = await _repositories.Estabelecimento.AtualizarEstabelecimento(estabelecimento);
+                if (estabelecimentoAtualizado is null) throw new Exception("Ocorreu um erro ao submeter formulário de aplicação.");
+                else return estabelecimentoAtualizado;
             }
             catch (Exception ex)
             {

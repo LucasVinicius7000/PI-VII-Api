@@ -11,12 +11,12 @@ namespace LocalStore.Application.Requests
         public string NomeFantasia { get; set; }
         public string RazaoSocial { get; set; }
         public string CNPJ { get; set; }
-        public string Descricao { get; set; }
-        public string Endereco { get; set; }
-        public string NomeProprietario { get; set; }
-        public string CPFProprietario { get; set; }
+        public string? Descricao { get; set; }
+        public string? Endereco { get; set; }
+        public string? NomeProprietario { get; set; }
+        public string? CPFProprietario { get; set; }
         public string Telefone { get; set; }
-        public string UrlLogoPerfil { get; set; }
+        public string? UrlLogoPerfil { get; set; }
         public Double Latitude { get; set; }
         public Double Longitude { get; set; }
 

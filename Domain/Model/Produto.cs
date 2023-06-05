@@ -8,7 +8,7 @@ namespace LocalStore.Domain.Model
         public int Id { get; set; }
         public int EstabelecimentoId { get; set; }
         [NotMapped]
-        public Estabelecimento Estabelecimento { get; set; }
+        public Estabelecimento? Estabelecimento { get; set; }
         public string Nome { get; set; }
         public string Marca { get; set; }   
         public double Peso { get; set; }

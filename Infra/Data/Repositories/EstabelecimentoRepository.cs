@@ -49,8 +49,15 @@ namespace LocalStore.Infra.Data.Repositories
         {
             return await _context.Set<Estabelecimento>()
                 .Where(e => e.Email == Email)
+                .Include(e => e.Produtos)
                 .FirstOrDefaultAsync();
 
+        }
+
+        public async Task<Estabelecimento> AtualizarEstabelecimento(Estabelecimento estabelecimento)
+        {
+            var estabelecimentoAtualizado = _context.Estabelecimentos.Update(estabelecimento);
+            return estabelecimento;
         }
 
     }
