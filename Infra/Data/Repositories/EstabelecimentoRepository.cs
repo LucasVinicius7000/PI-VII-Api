@@ -57,6 +57,7 @@ namespace LocalStore.Infra.Data.Repositories
         public async Task<Estabelecimento> AtualizarEstabelecimento(Estabelecimento estabelecimento)
         {
             var estabelecimentoAtualizado = _context.Estabelecimentos.Update(estabelecimento);
+            await _context.SaveChangesAsync();
             return estabelecimento;
         }
 

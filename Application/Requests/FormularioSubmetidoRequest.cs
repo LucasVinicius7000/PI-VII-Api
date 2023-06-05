@@ -16,6 +16,7 @@ namespace LocalStore.Application.Requests
         public double TaxaMinima { get; set; }
         public string CPFProprietario { get; set; }
         public int EstabelecimentoId { get; set; }
+        public string Endereco { get; set; }
 
     }
 }

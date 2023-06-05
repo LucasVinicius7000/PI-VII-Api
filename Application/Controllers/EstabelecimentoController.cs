@@ -92,7 +92,7 @@ namespace LocalStore.Application.Controllers
 
         [HttpPost("submitForm")]
         [Authorize(Roles = "Estabelecimento")]
-        public async Task<ActionResult<Estabelecimento>> SubmeterFormularioDeAplicacao(FormularioSubmetidoRequest formulario)
+        public async Task<ActionResult<ApiResponse<Estabelecimento>>> SubmeterFormularioDeAplicacao(FormularioSubmetidoRequest formulario)
         {
             
             try
@@ -115,6 +115,8 @@ namespace LocalStore.Application.Controllers
                 estabelecimento.UrlAlvaraFuncionamento = arquivoUrl;
                 estabelecimento.MetodoCompra = formulario.MetodoCompra;
                 estabelecimento.FormasPagamentoAceitas = formulario.FormasPagamento;
+                estabelecimento.Endereco = formulario.Endereco;
+                estabelecimento.Aprovado = false;
 
                 var estabelecientoAtualizado = await Services.Estabelecimento.SubmeterFormularioDeAplicacao(estabelecimento);
 
