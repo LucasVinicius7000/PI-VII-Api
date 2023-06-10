@@ -116,7 +116,7 @@ namespace LocalStore.Application.Controllers
                 estabelecimento.MetodoCompra = formulario.MetodoCompra;
                 estabelecimento.FormasPagamentoAceitas = formulario.FormasPagamento;
                 estabelecimento.Endereco = formulario.Endereco;
-                estabelecimento.Aprovado = false;
+                estabelecimento.Aprovado = Domain.Enum.StatusAprovacao.Pendente;
 
                 var estabelecientoAtualizado = await Services.Estabelecimento.SubmeterFormularioDeAplicacao(estabelecimento);
 

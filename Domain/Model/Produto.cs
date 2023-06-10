@@ -10,7 +10,7 @@ namespace LocalStore.Domain.Model
         [NotMapped]
         public Estabelecimento? Estabelecimento { get; set; }
         public string Nome { get; set; }
-        public string Marca { get; set; }   
+        public string? Marca { get; set; }   
         public double Peso { get; set; }
         public Categoria Categoria { get; set; }
         public DateTime? VencimentoEm { get; set; }

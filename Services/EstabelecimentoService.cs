@@ -42,7 +42,7 @@ namespace LocalStore.Services
 
                 if (!assignedRoleResult.Succeeded) throw new Exception("Ocorreu um erro ao definir usuário como estabelecimento.");
 
-                estabelecimento.Aprovado = false;
+                estabelecimento.Aprovado = Domain.Enum.StatusAprovacao.Reprovado;
                 var estabelecimentoCriado = await _repositories.Estabelecimento.
                     InsertEstabelecimento(estabelecimento);
 
