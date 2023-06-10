@@ -51,7 +51,6 @@ namespace LocalStore.Infra.Data.Repositories
                 .Where(e => e.Email == Email)
                 .Include(e => e.Produtos)
                 .FirstOrDefaultAsync();
-
         }
 
         public async Task<Estabelecimento> AtualizarEstabelecimento(Estabelecimento estabelecimento)
