@@ -4,6 +4,7 @@
     {
         Reprovado = 0,
         Aprovado = 1,
-        Pendente = 2,
+        PendenteAprovacao = 2,
+        PendenteFormulario = 3,
     }
 }
