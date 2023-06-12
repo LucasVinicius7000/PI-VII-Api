@@ -101,6 +101,7 @@ namespace LocalStore.Application.Controllers
                 if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
                 var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estalecimento, "Estabelecimentos encontrado com sucesso.");
                 return StatusCode(200, apiResponse);
+
             }
             catch (Exception ex)
             {
