@@ -47,8 +47,8 @@ namespace LocalStore.Application.Controllers
         }
 
         [HttpGet("listar")]
-        [Authorize]
-        public async Task<ActionResult<List<Estabelecimento>>> ListarEstabelecimentosProximos([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] double raio)
+        [Authorize(Roles = "Admin, Cliente")]
+        public async Task<ActionResult<ApiResponse<List<Estabelecimento>>>> ListarEstabelecimentosProximos([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] double raio)
         {
 
             try
@@ -79,6 +79,25 @@ namespace LocalStore.Application.Controllers
                 if(UserEstabelecimento.Email is null || UserEstabelecimento.Email == string.Empty) throw new Exception("Id do estabelecimento inválido.");
 
                 var estalecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorEmail(UserEstabelecimento.Email);
+                if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
+                var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estalecimento, "Estabelecimentos encontrado com sucesso.");
+                return StatusCode(200, apiResponse);
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao buscar o estabelecimento. " + ex.Message, "EstabelecimentoController:BuscarInfoEstabelecimento", ex);
+                return StatusCode(500, apiResponse);
+            }
+        }
+
+        [HttpGet("info")]
+        [Authorize(Roles = "Admin, Cliente")]
+        public async Task<ActionResult<ApiResponse<Estabelecimento>>> BuscarInfoEstabelecimentoPorId([FromQuery] int id)
+        {
+            try
+            {
+                if (id <= 0) throw new Exception("Id do estabelecimento inválido.");
+                var estalecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorId(id);
                 if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
                 var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estalecimento, "Estabelecimentos encontrado com sucesso.");
                 return StatusCode(200, apiResponse);

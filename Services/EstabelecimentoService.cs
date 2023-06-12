@@ -130,7 +130,7 @@ namespace LocalStore.Services
                 if (EstabelecimentoId == null) throw new Exception("O id do estabelecimento não é válido.");
 
                 var estabelecimentoEncontrado = await _repositories.Estabelecimento.BuscarEstabelecimentoPeloId(EstabelecimentoId);
-
+                estabelecimentoEncontrado.Produtos = await _repositories.Produto.BuscarProdutosPorEstabelecimentoId(EstabelecimentoId);
                 if (estabelecimentoEncontrado is null) throw new Exception("O estabelecimento informado não foi encontrado na base de dados.");
                 return estabelecimentoEncontrado;
             }
