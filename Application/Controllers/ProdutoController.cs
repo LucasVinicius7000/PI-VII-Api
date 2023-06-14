@@ -47,5 +47,28 @@ namespace LocalStore.Application.Controllers
             }
         }
 
+        [HttpGet("")]
+        [Authorize(Roles = "Estabelecimento, Cliente")]
+        public async Task<ActionResult<ApiResponse<ProdutoResponse>>> BuscarProduto([FromQuery] int id)
+        {
+            try
+            {
+                var produtoEncontrado = await Services.Produto.BuscarProdutoPorId(id);;
+                if (produtoEncontrado != null)
+                {
+                    var produtoResponse = new ProdutoResponse(produtoEncontrado);
+                    var apiResponse = new ApiResponse<ProdutoResponse>().SucessResponse(produtoResponse, "Produto " + produtoEncontrado.Nome + " encontrado com sucesso.");
+                    return StatusCode(200, apiResponse);
+                }
+                else throw new Exception("Falha ao buscar o produto.");
+
+            }
+            catch (Exception ex)
+            {
+                var apiReponse = new ApiResponse<ProdutoResponse>().FailureResponse(ex.Message, "ProdutoController:BuscarProduto", ex);
+                return StatusCode(500, apiReponse);
+            }
+        }
+
     }
 }

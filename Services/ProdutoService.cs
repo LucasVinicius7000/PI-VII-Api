@@ -43,5 +43,22 @@ namespace LocalStore.Services
             }
         }
 
+        public async Task<Produto> BuscarProdutoPorId(int id)
+        {
+            try
+            {
+                if (id <= 0) throw new Exception("O id do produto não é válido.");
+                var produtoEncontrado = await _repositories.Produto.BuscarProdutoPorId(id);
+                if (produtoEncontrado is null) throw new Exception("Produto não encontrado.");
+                return produtoEncontrado;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

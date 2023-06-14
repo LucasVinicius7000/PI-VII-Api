@@ -28,5 +28,14 @@ namespace LocalStore.Infra.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Produto> BuscarProdutoPorId(int Id)
+        {
+            return await _context.Set<Produto>()
+                .Where(x => x.Id == Id)
+                .FirstOrDefaultAsync();
+        }
+
+
+
     }
 }
