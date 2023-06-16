@@ -37,7 +37,14 @@ namespace LocalStore.Infra.Services.DistanceMatrix.Implementations
                         if(status == "OK")
                         {
                             string distance = result.RootElement.GetProperty("rows")[0].GetProperty("elements")[0].GetProperty("distance").GetProperty("text").ToString();
-                            distance = Regex.Replace(distance, " km", "");
+                            if(distance.Contains("km"))
+                            {
+                                distance = Regex.Replace(distance, " km", "");
+                            }
+                            else if(distance.Contains("m"))
+                            {
+                                distance = Regex.Replace(distance, " m", "");
+                            }
                             return Double.Parse(distance, CultureInfo.InvariantCulture);
                         }
                         else if (status == "OVER_QUERY_LIMIT" || status == "OVER_QUERY_LIMIT")
