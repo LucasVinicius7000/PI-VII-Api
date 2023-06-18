@@ -26,6 +26,7 @@ namespace LocalStore.Services.Implementations
         public ClienteService Cliente { get; }
         public TokenService TokenService { get; }
         public ProdutoService Produto { get; }
+        public PedidoService Pedido { get; }
 
         #endregion
 
@@ -46,7 +47,8 @@ namespace LocalStore.Services.Implementations
             Estabelecimento ??= new EstabelecimentoService(this, repositories);
             Cliente ??= new ClienteService(this, repositories);
             Produto ??= new ProdutoService(this, repositories);
-            TokenService ??= new TokenService(configuration);
+            Pedido ??= new PedidoService(this, repositories);
+            TokenService ??= new TokenService(configuration);          
             
         }
         

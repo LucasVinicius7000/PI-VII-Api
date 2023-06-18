@@ -13,5 +13,6 @@ namespace LocalStore.Services.Interfaces
         EstabelecimentoService Estabelecimento { get; }
         ClienteService Cliente { get; }
         ProdutoService Produto { get; }
+        PedidoService Pedido { get; }
     }
 }

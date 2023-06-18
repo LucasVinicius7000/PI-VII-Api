@@ -14,7 +14,7 @@ namespace LocalStore.Domain.Model
         public double? Peso { get; set; }
         public Categoria Categoria { get; set; }
         public DateTime? VencimentoEm { get; set; }
-        public Double QuantidadeEstoque { get; set; }
+        public Double? QuantidadeEstoque { get; set; }
         public double ValorUnitario { get; set; }
         public double? ValorComDesconto { get; set; }
         public string? Lote { get; set; }

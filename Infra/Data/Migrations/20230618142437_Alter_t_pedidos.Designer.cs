@@ -4,6 +4,7 @@ using LocalStore.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalStore.Infra.Data.Migrations
 {
     [DbContext(typeof(LocalStoreDbContext))]
-    partial class LocalStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230618142437_Alter_t_pedidos")]
+    partial class Alter_t_pedidos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,7 @@ namespace LocalStore.Infra.Data.Migrations
                     b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FormaPagamento")
+                    b.Property<int>("FormaPagamento")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsProdutoAtual")
@@ -177,7 +179,7 @@ namespace LocalStore.Infra.Data.Migrations
                     b.Property<double?>("Peso")
                         .HasColumnType("float");
 
-                    b.Property<double?>("QuantidadeEstoque")
+                    b.Property<double>("QuantidadeEstoque")
                         .HasColumnType("float");
 
                     b.Property<string>("UnidadeMedida")
@@ -219,9 +221,11 @@ namespace LocalStore.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Lote")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marca")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
@@ -229,38 +233,30 @@ namespace LocalStore.Infra.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Observacao")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PedidoId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("Peso")
+                    b.Property<double>("Peso")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProdutoOriginalId")
+                    b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
 
-                    b.Property<double?>("QuantidadePedido")
-                        .HasColumnType("float");
-
-                    b.Property<string>("UnidadeMedida")
+                    b.Property<string>("UrlImagem")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UrlImagem")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("ValorComDesconto")
+                    b.Property<double>("ValorComDesconto")
                         .HasColumnType("float");
 
                     b.Property<double>("ValorUnitario")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("VencimentoEm")
+                    b.Property<DateTime>("VencimentoEm")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("VendidoPor")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

@@ -76,5 +76,20 @@ namespace LocalStore.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<Cliente> BuscarClientePeloId(int Id)
+        {
+            try
+            {
+                if (Id == 0) throw new Exception("O user id do cliente não é válido");
+                var cliente = await _repositories.Cliente.BuscarClientePeloId(Id);
+                if (cliente == null) throw new Exception("Cliente não encontrado na base de dados.");
+                return cliente;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

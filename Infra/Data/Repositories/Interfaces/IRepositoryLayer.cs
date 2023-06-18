@@ -9,5 +9,6 @@
         EstabelecimentoRepository Estabelecimento { get; }
         ClienteRepository Cliente { get; }
         ProdutoRepository Produto { get; }
+        PedidoRepository Pedido { get; }
     }
 }
