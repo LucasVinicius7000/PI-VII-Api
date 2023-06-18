@@ -13,15 +13,17 @@ namespace LocalStore.Application.Responses
         public int EstabelecimentoId { get; set; }
         public string Nome { get; set; }
         public string Marca { get; set; }
-        public double Peso { get; set; }
+        public double? Peso { get; set; }
         public Categoria Categoria { get; set; }
         public DateTime? VencimentoEm { get; set; }
-        public int QuantidadeEstoque { get; set; }
+        public Double QuantidadeEstoque { get; set; }
         public double ValorUnitario { get; set; }
         public double? ValorComDesconto { get; set; }
         public string? Lote { get; set; }
         public string? Observacao { get; set; }
         public string UrlImagem { get; set; }
+        public FormaDeVendaProduto VendidoPor { get; set; }
+        public string UnidadeMedida { get; set; }   
 
         public ProdutoResponse(Produto produto)
         {
@@ -35,9 +37,11 @@ namespace LocalStore.Application.Responses
             this.ValorComDesconto = produto.ValorComDesconto;
             this.UrlImagem = produto.UrlImagem;
             this.Observacao = produto.Observacao;
+            this.VendidoPor = produto.VendidoPor;
             this.Categoria = produto.Categoria;
             this.VencimentoEm = produto.VencimentoEm;
             this.QuantidadeEstoque = produto.QuantidadeEstoque;
+            this.UnidadeMedida = produto.UnidadeMedida;
         }
 
     }

@@ -4,6 +4,7 @@ using LocalStore.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalStore.Infra.Data.Migrations
 {
     [DbContext(typeof(LocalStoreDbContext))]
-    partial class LocalStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230618051657_Alter_T_Produtos_Add_C_UnidadeMedidade")]
+    partial class Alter_T_Produtos_Add_C_UnidadeMedidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

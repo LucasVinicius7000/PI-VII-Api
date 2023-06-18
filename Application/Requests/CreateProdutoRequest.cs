@@ -13,7 +13,7 @@ namespace LocalStore.Application.Requests
         public double Peso { get; set; }
         public Categoria Categoria { get; set; }
         public DateTime? VencimentoEm { get; set; }
-        public int QuantidadeEstoque { get; set; }
+        public Double QuantidadeEstoque { get; set; }
         public double ValorUnitario { get; set; }
         public double? ValorComDesconto { get; set; }
         public string? Lote { get; set; }
@@ -21,6 +21,8 @@ namespace LocalStore.Application.Requests
         public string? NomeArquivoImagem { get; set; }
         public string? ExtensaoArquivoImagem { get; set; }
         public string? ConteudoArquivoImagem { get; set; }
+        public FormaDeVendaProduto VendidoPor { get; set; }
+        public string UnidadeMedida { get; set; }
 
         public Produto ToProduto()
         {
@@ -36,6 +38,9 @@ namespace LocalStore.Application.Requests
                 EstabelecimentoId = EstabelecimentoId,
                 Lote = Lote,
                 Marca = Marca,
+                VendidoPor = VendidoPor,
+                UnidadeMedida = UnidadeMedida,
+                Categoria = Categoria,
 
             };
         }

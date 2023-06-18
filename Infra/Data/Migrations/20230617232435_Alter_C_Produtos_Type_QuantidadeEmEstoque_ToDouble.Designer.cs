@@ -4,6 +4,7 @@ using LocalStore.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LocalStore.Infra.Data.Migrations
 {
     [DbContext(typeof(LocalStoreDbContext))]
-    partial class LocalStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230617232435_Alter_C_Produtos_Type_QuantidadeEmEstoque_ToDouble")]
+    partial class Alter_C_Produtos_Type_QuantidadeEmEstoque_ToDouble
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,10 +179,6 @@ namespace LocalStore.Infra.Data.Migrations
                     b.Property<double>("QuantidadeEstoque")
                         .HasColumnType("float");
 
-                    b.Property<string>("UnidadeMedida")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UrlImagem")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -194,8 +192,8 @@ namespace LocalStore.Infra.Data.Migrations
                     b.Property<DateTime?>("VencimentoEm")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VendidoPor")
-                        .HasColumnType("int");
+                    b.Property<bool>("VendidoPorPeso")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
