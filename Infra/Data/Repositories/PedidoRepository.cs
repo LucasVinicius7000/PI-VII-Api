@@ -20,6 +20,7 @@ namespace LocalStore.Infra.Data.Repositories
             return await _context.Set<Pedido>().
                 Where(p => p.ClienteId == clienteId && p.IsProdutoAtual).
                 Include(p => p.ProdutosPedidos).
+                Include(p => p.Estabelecimento).
                 FirstOrDefaultAsync();
         }
 
@@ -63,6 +64,15 @@ namespace LocalStore.Infra.Data.Repositories
                 .Update(pedidoAtualizado).Entity;
             await _context.SaveChangesAsync();
             return pedidoAtualizar;
+        }
+
+        public async Task<List<Pedido>> BuscarTodosPedidosPorIdDoCliente(int clienteId)
+        {
+            return await _context.Set<Pedido>()
+                .Where(p => p.ClienteId == clienteId)
+                .Include(p => p.Estabelecimento)
+                .Include(p => p.ProdutosPedidos)
+                .ToListAsync();
         }
 
 

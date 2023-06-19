@@ -143,5 +143,20 @@ namespace LocalStore.Services
             }
         }
 
+        public async Task<List<Pedido>> ListarPedidosPorClienteId(int clienteId)
+        {
+            try
+            {
+                if (clienteId <= 0) throw new Exception("O id do cliente é inválido, não foi possível listar pedidos.");
+                var listaPedidos = await _repositories.Pedido.BuscarTodosPedidosPorIdDoCliente(clienteId);
+                if (listaPedidos == null) throw new Exception("Ocorreu uma falha ao listar todos pedidos do cliente atual.");
+                return listaPedidos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

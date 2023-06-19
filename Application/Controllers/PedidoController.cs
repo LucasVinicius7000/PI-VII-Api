@@ -20,7 +20,7 @@ namespace LocalStore.Application.Controllers
 
         [HttpGet("atual")]
         [Authorize(Roles = "Cliente")]
-        public async Task<ActionResult> BuscaPedidoAtual([FromQuery] int ClienteId)
+        public async Task<ActionResult<Pedido>> BuscaPedidoAtual([FromQuery] int ClienteId)
         {
             try
             {
@@ -92,8 +92,24 @@ namespace LocalStore.Application.Controllers
                 return StatusCode(500, apiResponse);
             }
         }
-    
-    
-    
+
+        [HttpGet("lista")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<List<Pedido>>> ListarPedidosPorId([FromQuery] int clienteId)
+        {
+            try
+            {
+                if (clienteId <= 0) throw new Exception("O id do cliente não é válido.");
+                var lista = await Services.Pedido.ListarPedidosPorClienteId(clienteId);
+                var apiresponse = new ApiResponse<List<Pedido>>().SucessResponse(lista, "Pedidos listados com sucesso.");
+                return StatusCode(200, apiresponse);
+            }
+            catch (Exception ex)
+            {
+                var apiresponse = new ApiResponse<List<Pedido>>().FailureResponse("Falha ao lista pedidos do cliente.", ex.Message, ex);
+                return StatusCode(500, apiresponse);
+            }
+        }
+
     }
 }
