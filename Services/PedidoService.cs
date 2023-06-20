@@ -30,6 +30,11 @@ namespace LocalStore.Services
                 else
                 {
                     pedidoAtual = await _repositories.Pedido.BuscarPedidoAtual(clienteId);
+                    foreach(var produto in pedidoAtual.ProdutosPedidos)
+                    {
+                        var original = await _repositories.Produto.BuscarProdutoPorId(produto.ProdutoOriginalId);
+                        produto.QuantidadeMax = original.QuantidadeEstoque;
+                    }
                     return pedidoAtual;
                 }
 
@@ -151,6 +156,36 @@ namespace LocalStore.Services
                 var listaPedidos = await _repositories.Pedido.BuscarTodosPedidosPorIdDoCliente(clienteId);
                 if (listaPedidos == null) throw new Exception("Ocorreu uma falha ao listar todos pedidos do cliente atual.");
                 return listaPedidos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Pedido> RemoverPedido(int idPedido, int idProduto)
+        {
+            try
+            {
+                if (idPedido <= 0) throw new Exception("O id do pedido é inválido, não foi possível remover produto.");
+                var removido = await _repositories.Pedido.RemoverProdutoDoPedido(idPedido, idProduto);
+                if (removido == null) throw new Exception("Ocorreu um erro remover pedido");
+                return removido;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Pedido> AlterarQuantidadePedido(int idPedido, int idProduto, string operacao)
+        {
+            try
+            {
+                if (idPedido <= 0) throw new Exception("O id do pedido é inválido.");
+                var alterado = await _repositories.Pedido.AlterarQtProdutoDoPedido(idPedido, idProduto, operacao);
+                if (alterado == null) throw new Exception("Ocorreu um erro ao alterar quantidade do produto.");
+                return alterado;
             }
             catch (Exception ex)
             {

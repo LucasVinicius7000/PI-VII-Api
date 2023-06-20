@@ -8,6 +8,7 @@ using LocalStore.Application.Requests;
 using LocalStore.Application.Responses;
 using LocalStore.Domain.Model;
 using LocalStore.Domain.DTO;
+using LocalStore.Infra.Services.DistanceMatrix.Implementations;
 
 namespace LocalStore.Application.Controllers
 {
@@ -44,6 +45,33 @@ namespace LocalStore.Application.Controllers
             }
         }
 
+        [HttpPost("distanciaClienteEstabelecimento")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult> CalculaDistanciaEstabelecimentoCliente([FromBody] CalculoDistanciaRequest coordenadas)
+        {
+            try
+            {
+                if (coordenadas.CoodernadasEstabelecimento == null) throw new Exception("Coordenadas do estabelecimento inválidas.");
+                if (coordenadas.CoodernadasCliente == null) throw new Exception("Coordenadas do cliente inválidas.");
+                if (coordenadas == null) throw new Exception("Coordenadas inválidas.");
+                var geo = new Geolocation(Configuration);
 
+                var response = new CalculoDistanciaResponse()
+                {
+                    DistanciaEmKm = await geo.CalculateDistanceByCoordinates(coordenadas.CoodernadasCliente, coordenadas.CoodernadasEstabelecimento)
+                };
+                if (response.DistanciaEmKm == null) throw new Exception("Erro ao calcular distancia entre estabelecimento e cliente.");
+
+                var apiResponse = new ApiResponse<CalculoDistanciaResponse>().SucessResponse(response, "Distancia calculada com sucesso");
+                return StatusCode(200, apiResponse);
+
+
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<CalculoDistanciaResponse>().FailureResponse("Falha ao calcular distancia", ex.Message, ex);
+                return StatusCode(500, apiResponse);
+            }
+        }
     }
 }

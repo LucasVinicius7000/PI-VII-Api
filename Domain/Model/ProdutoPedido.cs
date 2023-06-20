@@ -23,5 +23,8 @@ namespace LocalStore.Domain.Model
         public string? UrlImagem { get; set; }
         public FormaDeVendaProduto VendidoPor { get; set; }
         public string UnidadeMedida { get; set; }
+        public bool Removed { get; set; }
+        [NotMapped]
+        public double? QuantidadeMax { get; set; } = 0.0;
     }
 }

@@ -75,11 +75,13 @@ namespace LocalStore.Application.Controllers
                 var pedidoJaExiste = await Services.Pedido.BuscarPedidoAtual(produtoAdicionar.ClienteId);
                 if (pedidoJaExiste != null)
                 {
+                    produtoOriginal.QuantidadeEstoque = produtoAdicionar.QuantidadeUnidadeKgLitro;
                     pedidoCriadoAtualizado = await Services.Pedido.AtualizarProdutosPedidos(pedidoJaExiste, produtoOriginal);
                     if (pedidoCriadoAtualizado == null) throw new Exception("Ocorreu um erro ao criar pedido e adicionar produto.");
                 }
                 else
                 {
+                    produtoOriginal.QuantidadeEstoque = produtoAdicionar.QuantidadeUnidadeKgLitro;
                     pedidoCriadoAtualizado = await Services.Pedido.CriarPedidoEAdicionarProduto(produtoAdicionar.ClienteId, produtoOriginal);
                     if (pedidoCriadoAtualizado == null) throw new Exception("Ocorreu um erro ao criar pedido e adicionar produto.");
                 }
@@ -107,6 +109,44 @@ namespace LocalStore.Application.Controllers
             catch (Exception ex)
             {
                 var apiresponse = new ApiResponse<List<Pedido>>().FailureResponse("Falha ao lista pedidos do cliente.", ex.Message, ex);
+                return StatusCode(500, apiresponse);
+            }
+        }
+
+        [HttpDelete("removerProdutoPedido")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<Pedido>> RemoverProdutoDoPedido([FromQuery] int pedidoId, [FromQuery] int produtoPedidoId)
+        {
+            try
+            {
+                if (pedidoId <= 0 || produtoPedidoId <= 0) throw new Exception("Os dados do pedido são inválidos, não foi possível remover produto.");
+                var produtoRemovido = await Services.Pedido.RemoverPedido(pedidoId, produtoPedidoId);
+                var apiresponse = new ApiResponse<Pedido>().SucessResponse(produtoRemovido, "Produto removido com sucesso.");
+                return StatusCode(200, apiresponse);
+            }
+            catch (Exception ex)
+            {
+                var apiresponse = new ApiResponse<List<Pedido>>().FailureResponse(ex.Message, ex.Message, ex);
+                return StatusCode(500, apiresponse);
+            }
+        }
+
+        [HttpPost("alterar")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<Pedido>> AlteraQuantidadeProdutoPedido([FromQuery] int pedidoId, [FromQuery] int produtoPedidoId, string operacao)
+        {
+            try
+            {
+                if (operacao == "add") operacao = "+";
+                if (operacao != "+" && operacao != "-" && operacao != "add") throw new Exception("Impossível alterar quantidade, operação inválida.");
+                if (pedidoId <= 0 || produtoPedidoId <= 0) throw new Exception("Os dados do pedido são inválidos, não foi possível alterar quantidade do produto.");
+                var produtoAlterado = await Services.Pedido.AlterarQuantidadePedido(pedidoId, produtoPedidoId, operacao);
+                var apiresponse = new ApiResponse<Pedido>().SucessResponse(produtoAlterado, "Quantidade do produto alterada com sucesso.");
+                return StatusCode(200, apiresponse);
+            }
+            catch (Exception ex)
+            {
+                var apiresponse = new ApiResponse<List<Pedido>>().FailureResponse(ex.Message, ex.Message, ex);
                 return StatusCode(500, apiresponse);
             }
         }

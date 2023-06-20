@@ -75,6 +75,45 @@ namespace LocalStore.Infra.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Pedido> RemoverProdutoDoPedido(int idPedido, int idProduto)
+        {
+            var produto = await _context.Set<Pedido>()
+                .Where(p => p.Id == idPedido)
+                .Include(p => p.ProdutosPedidos)
+                .FirstAsync();
+
+            produto.ProdutosPedidos.Where(prod => prod.Id == idProduto).First().Removed = true;
+
+            var prod = _context.Set<Pedido>().Update(produto).Entity;
+            await _context.SaveChangesAsync();
+            return prod;
+
+        }
+
+        public async Task<Pedido> AlterarQtProdutoDoPedido(int idPedido, int idProduto, string operacao)
+        {
+            var produtoPedido = _context.Set<Pedido>()
+                .Where(p => p.Id == idPedido)
+                .Include(e => e.Estabelecimento)
+                .Include(p => p.ProdutosPedidos)
+                .First();
+
+            
+            if(operacao == "+")
+            {
+                produtoPedido.ProdutosPedidos.Where(prod => prod.Id == idProduto).First().QuantidadePedido++;
+            }
+            else if(operacao == "-")
+            {
+                produtoPedido.ProdutosPedidos.Where(prod => prod.Id == idProduto).First().QuantidadePedido--;
+            }
+
+            var entity = _context.Set<Pedido>().Update(produtoPedido).Entity;
+            await _context.SaveChangesAsync();
+            return entity;
+
+        }
+
 
     }
 }
