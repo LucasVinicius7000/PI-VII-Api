@@ -35,24 +35,30 @@ namespace LocalStore.Infra.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<ProdutoPedido>> RestaurarEstoqueDePedidosCancelados(List<ProdutoPedido> produtos)
+        public async Task<List<ProdutoPedido>> AtualizarEstoqueDePedidosConfirmado(List<ProdutoPedido> produtos)
         {
             try
             {
-                if (produtos.Count <= 0) throw new Exception("Não há produtos a serem restaurados no estoque.");
+                if (produtos.Count <= 0) throw new Exception("Não há produtos a serem atualizados no estoque.");
                 foreach(var produto in produtos)
                 {
-                    var produtoEncontrado = await _context.Set<Produto>()
+                    if(!produto.Removed)
+                    {
+                        var produtoEncontrado = await _context.Set<Produto>()
                          .Where(p => p.Id == produto.ProdutoOriginalId)
                          .FirstAsync();
 
-                    if(produtoEncontrado != null)
-                    {
-                        produtoEncontrado.QuantidadeEstoque += produto.QuantidadePedido;
-                        _context.Set<Produto>().Update(produtoEncontrado);
-                        _context.SaveChanges();
+                        if (produtoEncontrado != null)
+                        {
+                            var balanco = produtoEncontrado.QuantidadeEstoque - produto.QuantidadePedido;
+                            if (balanco < 0) throw new Exception("Não há unidades suficientes de " + produtoEncontrado.Nome + " disponíveis em estoque. Por favor, reduza a quantidade antes de concluir.");
+                            produtoEncontrado.QuantidadeEstoque -= produto.QuantidadePedido;
+                            _context.Set<Produto>().Update(produtoEncontrado);
+                            //_context.SaveChanges();
+                        }
                     }
                 }
+                _context.SaveChanges();
                 return produtos;
             }
             catch (Exception ex)

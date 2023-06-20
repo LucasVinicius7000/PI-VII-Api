@@ -75,14 +75,12 @@ namespace LocalStore.Application.Controllers
                 var pedidoJaExiste = await Services.Pedido.BuscarPedidoAtual(produtoAdicionar.ClienteId);
                 if (pedidoJaExiste != null)
                 {
-                    produtoOriginal.QuantidadeEstoque = produtoAdicionar.QuantidadeUnidadeKgLitro;
-                    pedidoCriadoAtualizado = await Services.Pedido.AtualizarProdutosPedidos(pedidoJaExiste, produtoOriginal);
+                    pedidoCriadoAtualizado = await Services.Pedido.AtualizarProdutosPedidos(pedidoJaExiste, produtoOriginal, produtoAdicionar.QuantidadeUnidadeKgLitro);
                     if (pedidoCriadoAtualizado == null) throw new Exception("Ocorreu um erro ao criar pedido e adicionar produto.");
                 }
                 else
                 {
-                    produtoOriginal.QuantidadeEstoque = produtoAdicionar.QuantidadeUnidadeKgLitro;
-                    pedidoCriadoAtualizado = await Services.Pedido.CriarPedidoEAdicionarProduto(produtoAdicionar.ClienteId, produtoOriginal);
+                    pedidoCriadoAtualizado = await Services.Pedido.CriarPedidoEAdicionarProduto(produtoAdicionar.ClienteId, produtoOriginal, produtoAdicionar.QuantidadeUnidadeKgLitro);
                     if (pedidoCriadoAtualizado == null) throw new Exception("Ocorreu um erro ao criar pedido e adicionar produto.");
                 }
                 var apiResponse = new ApiResponse<Pedido>().SucessResponse(pedidoCriadoAtualizado, "Pedido #" + pedidoCriadoAtualizado.Id + " atualizado com sucesso.");
@@ -151,5 +149,23 @@ namespace LocalStore.Application.Controllers
             }
         }
 
+        [HttpPost("confirmar")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<Pedido>> ConfirmarPedidoEnviadoNoWhatsApp([FromQuery] int idPedido)
+        {
+            try
+            {
+                if (idPedido <= 0) throw new Exception("Id do pedido não é válido, falha ao confirmar.");
+                var pedidoConfirmado = await Services.Pedido.ConcluirPedidoAtualizarEstoque(idPedido);
+                if (pedidoConfirmado == null) throw new Exception("Erro desconhecido ao concluir pedido, tente mais tarde.");
+                var apiresponse = new ApiResponse<Pedido>().SucessResponse(pedidoConfirmado, "Pedido confirmado com sucesso.");
+                return StatusCode(200, apiresponse);
+            }
+            catch (Exception ex)
+            {
+                var apiresponse = new ApiResponse<Pedido>().FailureResponse(ex.Message, ex.Message, ex);
+                return StatusCode(500, apiresponse);
+            }
+        }
     }
 }

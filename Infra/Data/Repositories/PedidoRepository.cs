@@ -28,6 +28,7 @@ namespace LocalStore.Infra.Data.Repositories
         {
             return await _context.Set<Pedido>().
                 Where(p => p.Id == Id).
+                Include(p => p.ProdutosPedidos).
                 FirstOrDefaultAsync();
         }
 
@@ -38,6 +39,19 @@ namespace LocalStore.Infra.Data.Repositories
                 .FirstOrDefaultAsync();
 
             pedido.StatusPedido = Domain.Enum.StatusPedido.Cancelado;
+            pedido.IsProdutoAtual = false;
+            _context.Update(pedido);
+            await _context.SaveChangesAsync();
+            return pedido;
+        }
+
+        public async Task<Pedido> ConfirmarPedido(int pedidoId)
+        {
+            var pedido = await _context.Set<Pedido>()
+                .Where(p => p.Id == pedidoId)
+                .FirstOrDefaultAsync();
+
+            pedido.StatusPedido = Domain.Enum.StatusPedido.Concluido;
             pedido.IsProdutoAtual = false;
             _context.Update(pedido);
             await _context.SaveChangesAsync();

@@ -8,6 +8,10 @@ using LocalStore.Application.Requests;
 using LocalStore.Application.Responses;
 using LocalStore.Domain.Model;
 using LocalStore.Domain.DTO;
+using LocalStore.Infra.Data.Context;
+using LocalStore.Domain.Model;
+using LocalStore.Domain.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocalStore.Application.Controllers
 {
@@ -26,7 +30,7 @@ namespace LocalStore.Application.Controllers
 
             try
             {
-                var novoEstabelecimento = await Services.Estabelecimento.CriarEstabelecimentoUsuario(estabelecimento, userDTO);  
+                var novoEstabelecimento = await Services.Estabelecimento.CriarEstabelecimentoUsuario(estabelecimento, userDTO);
                 if (novoEstabelecimento is null)
                 {
                     throw new Exception("Ocorreu um erro ao criar o usuário para o estabelecimento. ");
@@ -63,7 +67,7 @@ namespace LocalStore.Application.Controllers
             catch (Exception ex)
             {
                 var apiResponse = new ApiResponse<List<Estabelecimento>>().FailureResponse("Ocorreu um erro listar os estabelecimentos próximos. " + ex.Message, "EstabelecimentoController:ListarEstabelecimentosProximos", ex);
-                return StatusCode(500,apiResponse);
+                return StatusCode(500, apiResponse);
             }
 
         }
@@ -76,7 +80,7 @@ namespace LocalStore.Application.Controllers
             {
                 if (userId is null || userId == string.Empty) throw new Exception("Id do estabelecimento inválido.");
                 var UserEstabelecimento = await Services.UserManager.FindByIdAsync(userId);
-                if(UserEstabelecimento.Email is null || UserEstabelecimento.Email == string.Empty) throw new Exception("Id do estabelecimento inválido.");
+                if (UserEstabelecimento.Email is null || UserEstabelecimento.Email == string.Empty) throw new Exception("Id do estabelecimento inválido.");
 
                 var estalecimento = await Services.Estabelecimento.BuscarEstabelecimentoPorEmail(UserEstabelecimento.Email);
                 if (estalecimento is null) throw new Exception("Não foi encontrado nenhum estabelecimento para o id informado.");
@@ -110,11 +114,49 @@ namespace LocalStore.Application.Controllers
             }
         }
 
+        [HttpPost("alterarStatus")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Estabelecimento>> AlterarStatusEstabelecimentos([FromQuery] Boolean aprovado, [FromQuery] int id)
+        {
+
+            try
+            {
+                if (aprovado != true && aprovado != false) throw new Exception("O status de aprovação escolhido não é reconhecido.");
+                var estabelecimento = await Services.Estabelecimento.AlterarStatusAprovacao(aprovado, id);
+                var apiResponse = new ApiResponse<Estabelecimento>().SucessResponse(estabelecimento, "Estabelecimentos encontrado com sucesso.");
+                return StatusCode(200, apiResponse);
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao alterar status de aprovação do estabelecimento.. " + ex.Message, "EstabelecimentoController", ex);
+                return StatusCode(500, apiResponse);
+            }
+
+        }
+
+        [HttpPost("listarPendentes")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse<List<Estabelecimento>>>> ListarEstabelecimentosPendentesAprovacao()
+        {
+            try
+            {
+                var estabelecimento = await Services.Estabelecimento.ListarEstabelecimentosPendentes();
+                if (estabelecimento == null) throw new Exception("Falha ao listar estabelecimentos pendentes de aprovação.");
+                var apiResponse = new ApiResponse<List<Estabelecimento>>().SucessResponse(estabelecimento, "Estabelecimentos encontrado com sucesso.");
+                return StatusCode(200, apiResponse);
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse<Estabelecimento>().FailureResponse("Ocorreu um erro ao buscar os estabelecimentos. " + ex.Message, "EstabelecimentoController", ex);
+                return StatusCode(500, apiResponse);
+            }
+        }
+
         [HttpPost("submitForm")]
         [Authorize(Roles = "Estabelecimento")]
         public async Task<ActionResult<ApiResponse<Estabelecimento>>> SubmeterFormularioDeAplicacao(FormularioSubmetidoRequest formulario)
         {
-            
+
             try
             {
                 if (formulario is null) throw new Exception("Formulário submetido inválido, tente novamente.");
@@ -152,5 +194,7 @@ namespace LocalStore.Application.Controllers
             }
 
         }
+
+
     }
 }

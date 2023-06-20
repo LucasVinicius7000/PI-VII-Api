@@ -7,6 +7,10 @@ using LocalStore.Domain.DTO;
 using LocalStore.Infra.Data.Repositories.Interfaces;
 using LocalStore.Infra.Services.DistanceMatrix.Implementations;
 using LocalStore.Application.Requests;
+using LocalStore.Infra.Data.Context;
+using LocalStore.Domain.Model;
+using LocalStore.Domain.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace LocalStore.Services
 {
@@ -80,7 +84,7 @@ namespace LocalStore.Services
                 List<Estabelecimento> estabelecimentos = new List<Estabelecimento>();
                 estabelecimentos = await _repositories.Estabelecimento.ListaEstabelecimentosPorRaioECoordenadas(origem, raio);
                 if (estabelecimentos.Count == 0 || estabelecimentos == null) throw new Exception("Nenhum estabelecimento próximo foi encontrado.");
-
+                estabelecimentos = estabelecimentos.Where(e => e.Aprovado == Domain.Enum.StatusAprovacao.Aprovado).ToList();
                 var geolocation = new Geolocation(_services.Configuration);
 
                 var estabelecimentosComDistancia = new List<Estabelecimento>();
@@ -170,5 +174,49 @@ namespace LocalStore.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<Estabelecimento>> ListarEstabelecimentosPendentes()
+        {
+            try
+            {
+                var estabelecimentos = await _repositories.Estabelecimento._context.Set<Estabelecimento>()
+                    .Where(e => e.Aprovado == Domain.Enum.StatusAprovacao.PendenteAprovacao)
+                    .ToListAsync();
+                return estabelecimentos;
+                    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Estabelecimento> AlterarStatusAprovacao(Boolean status, int idEstabelecimento)
+        {
+            try
+            {
+                var novoStatus = Domain.Enum.StatusAprovacao.Reprovado;
+                if (status)
+                {
+                    novoStatus = Domain.Enum.StatusAprovacao.Aprovado;
+                }
+
+                var estabelecimentos = await _repositories.Estabelecimento.
+                    _context.Set<Estabelecimento>()
+                    .Where(e => e.Id == idEstabelecimento)
+                    .FirstAsync();
+
+                estabelecimentos.Aprovado = novoStatus;
+                var newEmpresa = _repositories.Estabelecimento._context.Set<Estabelecimento>().Update(estabelecimentos);
+                await _repositories.Estabelecimento._context.SaveChangesAsync();
+                return newEmpresa.Entity;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

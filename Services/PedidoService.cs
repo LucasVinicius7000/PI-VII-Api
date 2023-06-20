@@ -30,6 +30,7 @@ namespace LocalStore.Services
                 else
                 {
                     pedidoAtual = await _repositories.Pedido.BuscarPedidoAtual(clienteId);
+                    if (pedidoAtual == null) return null;
                     foreach(var produto in pedidoAtual.ProdutosPedidos)
                     {
                         var original = await _repositories.Produto.BuscarProdutoPorId(produto.ProdutoOriginalId);
@@ -67,7 +68,7 @@ namespace LocalStore.Services
             }
         }
        
-        public async Task<Pedido> CriarPedidoEAdicionarProduto(int clienteId,Produto produtoOriginal)
+        public async Task<Pedido> CriarPedidoEAdicionarProduto(int clienteId,Produto produtoOriginal, double quantidade)
         {
             try
             {
@@ -83,7 +84,7 @@ namespace LocalStore.Services
                     ProdutoOriginalId = produtoOriginal.Id,
                     ValorComDesconto = produtoOriginal.ValorComDesconto,
                     ValorUnitario = produtoOriginal.ValorUnitario,
-                    QuantidadePedido = produtoOriginal.QuantidadeEstoque,
+                    QuantidadePedido = quantidade,
                     UnidadeMedida = produtoOriginal.UnidadeMedida,
                     UrlImagem = produtoOriginal.UrlImagem,
                     VencimentoEm = produtoOriginal.VencimentoEm,
@@ -111,7 +112,7 @@ namespace LocalStore.Services
             }
         }
 
-        public async Task<Pedido> AtualizarProdutosPedidos(Pedido pedido, Produto produtoOriginal)
+        public async Task<Pedido> AtualizarProdutosPedidos(Pedido pedido, Produto produtoOriginal, double quantidade)
         {
             try
             {
@@ -127,7 +128,7 @@ namespace LocalStore.Services
                     ProdutoOriginalId = produtoOriginal.Id,
                     ValorComDesconto = produtoOriginal.ValorComDesconto,
                     ValorUnitario = produtoOriginal.ValorUnitario,
-                    QuantidadePedido = produtoOriginal.QuantidadeEstoque,
+                    QuantidadePedido = quantidade,
                     UnidadeMedida = produtoOriginal.UnidadeMedida,
                     UrlImagem = produtoOriginal.UrlImagem,
                     VencimentoEm = produtoOriginal.VencimentoEm,
@@ -189,6 +190,26 @@ namespace LocalStore.Services
             }
             catch (Exception ex)
             {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Pedido> ConcluirPedidoAtualizarEstoque(int idPedido)
+        {
+            try
+            {
+                await _repositories.BeginTransaction();
+                var pedido = await _repositories.Pedido.BuscarPedidoPorId(idPedido);
+                if (pedido == null) throw new Exception("Pedido não encontrado, falha ao confirmar.");
+                var estoqueAtualizado = await _repositories.Produto.AtualizarEstoqueDePedidosConfirmado(pedido.ProdutosPedidos);
+                var pedidoConfirmado = await _repositories.Pedido.ConfirmarPedido(idPedido);
+                if (pedidoConfirmado == null) throw new Exception("Falha ao confirmar pedido.");
+                await _repositories.CommitTransaction();
+                return pedidoConfirmado;
+            }
+            catch (Exception ex)
+            {
+                await _repositories.RollBackTransaction();
                 throw new Exception(ex.Message);
             }
         }
